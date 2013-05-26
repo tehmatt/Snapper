@@ -5,8 +5,11 @@ html, body {
 	overflow: hidden;
 }
 
-#logout {
+#application {
 	display: none;
+}
+
+#logout {
 	position: absolute;
 	bottom: 1pt;
 	left: 1pt;
@@ -16,7 +19,8 @@ html, body {
 	z-index: 2;
 }
 
-#loginForm {
+#loginDiv {
+	display: none;
 	position: absolute;
 	left: 20pt;
 	right: 20pt;
@@ -26,7 +30,6 @@ html, body {
 }
 
 #image {
-	display: none;
 	position: absolute;
 	top: 0;
 	left: 21em;
@@ -50,7 +53,6 @@ html, body {
 }
 
 #friendList {
-	display: none;
 	position: absolute;
 	top: 0;
 	left: 0;
@@ -89,7 +91,6 @@ html, body {
 }
 
 #snapList {
-	display: none;
 	position: absolute;
 	top: 0;
 	right: 0;

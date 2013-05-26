@@ -15,14 +15,11 @@ var Random = new function () {
 };
 
 var UI = new function() {
-	this.draw = function() {
-	};
-
 	// Login and set details
 	this.login = function(form) {
 		if (typeof(form) != "undefined") {
-			document.body.removeChild(document.getElementById("loginForm"));
-			var login = [form.elements.username.value, form.elements.password.value];
+			document.getElementById("loginDiv").style.display = "none";
+			var login = [document.login.elements.username.value, document.login.elements.password.value];
 		}
 		else
 			var login = [localStorage["user"], localStorage["pass"]].filter(function(elem){return elem});
@@ -41,42 +38,16 @@ var UI = new function() {
 
 	// Display a login form in document.body with id=loginForm
 	this.displayLogin = function(msg) {
-		var div = document.createElement("div");
-		div.id = "loginForm";
-		div.innerHTML = "Snapchat Login";
+		var div = document.getElementById("loginDiv");
 		if (typeof(msg) != "undefined") {
-			var message = document.createElement("div");
+			var message = document.getElementById("loginMessage");
 			message.innerHTML = msg;
-			div.appendChild(message);
 		}
-		var form = document.createElement("form");
-		var user = document.createElement("input");
-		user.name = "username";
-		user.type = "text";
-		user.placeholder = "Username";
-		var pass = document.createElement("input");
-		pass.name = "password";
-		pass.type = "password";
-		pass.placeholder = "Password";
-		var submit = document.createElement("input");
-		submit.type = "submit";
-		submit.value = "Login";
-		submit.onclick = function(){
-							UI.login(form);
-							return false;
-						 };
-		form.appendChild(user);
-		form.appendChild(pass);
-		form.appendChild(submit);
-		div.appendChild(form);
-		document.body.appendChild(div);
+		div.style.display = "block";
 	};
 
 	this.drawApp = function() {
-		[ document.getElementById("image"),
-		  document.getElementById("snapList"),
-		  document.getElementById("logout"),
-		  document.getElementById("friendList") ].map(function(elem) {elem.style.display = "block";});
+		document.getElementById("application").style.display = "block";
 		this.displayFriends();
 		this.displaySnaps();
 	};
