@@ -17,10 +17,8 @@ var Random = new function () {
 var UI = new function() {
 	// Login and set details
 	this.login = function(form) {
-		if (typeof(form) != "undefined") {
-			document.getElementById("loginDiv").style.display = "none";
+		if (typeof(form) != "undefined")
 			var login = [document.login.elements.username.value, document.login.elements.password.value];
-		}
 		else
 			var login = [localStorage["user"], localStorage["pass"]].filter(function(elem){return elem});
 		if (login.length != 2) {
@@ -31,6 +29,7 @@ var UI = new function() {
 		if (loginDetails == null || !loginDetails.logged)
 			this.displayLogin("Invalid Credentials");
 		else {
+			document.getElementById("login").style.display = "none";
 			Snap.setLogin(loginDetails);
 			this.drawApp();
 		};
@@ -38,12 +37,13 @@ var UI = new function() {
 
 	// Display a login form in document.body with id=loginForm
 	this.displayLogin = function(msg) {
-		var div = document.getElementById("loginDiv");
 		if (typeof(msg) != "undefined") {
 			var message = document.getElementById("loginMessage");
+			message.style.display = "block";
 			message.innerHTML = msg;
 		}
-		div.style.display = "block";
+		document.getElementById("loginPass").value = "";
+		document.getElementById("login").style.display = "block";
 	};
 
 	this.drawApp = function() {
@@ -126,8 +126,10 @@ var Backend = new function() {
 		req.send("username="+user+"&password="+pass);
 		try {
 			var result = JSON.parse(req.responseText);
-			localStorage["user"] = user;
-			localStorage["pass"] = pass;
+			if (result.logged) {
+				localStorage["user"] = user;
+				localStorage["pass"] = pass;
+			}
 			return result;
 		}
 		catch(err) {

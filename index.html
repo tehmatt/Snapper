@@ -2,20 +2,21 @@
 <html>
 	<head>
 		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-		<link href="snap.css" type="text/css" rel="stylesheet">
-		<title>Snapchat</title>
+		<link href="snapper.css" type="text/css" rel="stylesheet">
+		<title>Snapper</title>
 	</script>
 </head>
 <body>
-	<div id="loginDiv">
+	<div id="login">
+		<img id="loginLogo" src="logo.png" alt="Snapper">
 		<div id="loginHeader">
-			Login to Snapper
+			Snapper
 		</div>
 		<div id="loginMessage"></div>
-		<form name="login" onsubmit="UI.login(true);return false;">
-			<input type="text" name="username" placeholder="Username">
-			<input type="password" name="password" placeholder="Password">
-			<input type="submit" onclick="UI.login(true);return false;">
+		<form id="loginForm" name="login" onsubmit="UI.login(true);return false;">
+			<input id="loginName" class="loginInput" type="text" name="username" placeholder="Username or Email"><br>
+			<input id="loginPass" class="loginInput" type="password" name="password" placeholder="Password"><br><br>
+			<input id="loginSubmit" class="loginInput" type="submit" onclick="UI.login(true);return false;" value="Login">
 		</form>
 	</div>
 
@@ -33,6 +34,7 @@
 			Logout
 		</div>
 	</div>
+
 </body>
 <script type="text/javascript" src="snap.js"></script>
 <script type="text/javascript">
