@@ -14,6 +14,24 @@ var Random = new function () {
 	};
 };
 
+// Return the time since start in Snapchat format
+function timePassed(start) {
+	var start = new Date(start);
+	var now = new Date();
+	var pass = new Date(now.getTime() - start.getTime());
+	var months = [ "January", "February", "March", "April", "May", "June",
+					   "July", "August", "September", "October", "November", "December" ];
+	if (pass.getUTCFullYear() > 1970 || pass.getUTCMonth() > 0 || pass.getUTCDate() > 7)
+		return months[start.getUTCMonth()] + " " + start.getUTCDate() + ", "+ start.getUTCFullYear();
+	if (pass.getUTCDate() > 1)
+		return (pass.getUTCDate() == 2 ? "1 day ago" : (pass.getUTCDate()-1) + " days ago");
+	if (pass.getUTCHours() > 0)
+		return (pass.getUTCHours() == 1 ? "1 hour ago" : pass.getUTCHours() + " hours ago");
+	if (pass.getUTCMinutes() > 0)
+		return (pass.getUTCMinutes() == 1 ? "1 minute ago" : pass.getUTCMinutes() + " minutes ago");
+	return (pass.getSeconds() == 1 ? "1 second ago" : pass.getUTCSeconds() + " seconds ago");
+}
+
 var UI = new function() {
 	// Login and set details
 	this.login = function(form) {
@@ -47,34 +65,58 @@ var UI = new function() {
 	};
 
 	this.drawApp = function() {
-		document.getElementById("application").style.display = "block";
-		this.displayFriends();
-		this.displaySnaps();
+		this.initCamera();
+		this.initFriends();
+		this.initSnaps();
+		this.displaySection("camera");
+	};
+
+	this.displaySection = function(section) {
+		var topLevels = document.body.children;
+		for (var i = 0; i < topLevels.length; i++)
+			topLevels[i].style.display = "none";
+		document.getElementById(section).style.display = "block";
+	};
+
+	this.initCamera = function() {
+		document.getElementById("snapsLink").addEventListener("click",
+			function() {UI.displaySection("snapchats")}, false);
+		document.getElementById("captureImage").addEventListener("click",
+			function() {alert("Picture taken");}, false);
+		document.getElementById("settingsLink").addEventListener("click",
+			function() {UI.displaySection("settings")}, false);
+		document.getElementById("friendsLink").addEventListener("click",
+			function() {UI.displaySection("friends")}, false);
+		document.getElementById("logout").addEventListener("click", UI.logout, false);
 	};
 
 	// Fill the friends list
-	this.displayFriends = function() {
-		var friends = Snap.getFriends();
-		var friendList = document.getElementById("friendList");
+	this.initFriends = function() {
+		var allFriends = Snap.getFriends();
+		var friends = allFriends.friends.sort(Snap.friendSort);
+		var friendList = document.getElementById("friendsAll");
 		for (var i = 0; i < friends.length; i++) {
+			var f = friends[i];
+			if (Snap.getUserInfo().user == f.name)
+				continue;
 			friendList.insertAdjacentHTML("beforeend",
-				"<li><span class=friend>"+(friends[i].display ? friends[i].display : "Unknown")+"</span>" +
-				"<span class=friendAlt>("+friends[i].name+")</span></li>"
+				"<li><span class=friend>" + (f.display ? f.display : f.name) + "</span>" +
+				(f.display ? "<span class=friendAlt>(" + f.name + ")</span>" : "") + "</li>"
 			);
 		}
 	};
 
-	this.displaySnaps = function() {
+	// Create the list of snaps
+	this.initSnaps = function() {
 		var snaps = Snap.getSnaps();
-		var snapList = document.getElementById("snapList");
+		var snapList = document.getElementById("snapsAll");
 		for (var i = 0; i < snaps.length; i++) {
-			if (snaps[i].sn == null)
-				continue;
+			var s = snaps[i];
 			snapList.insertAdjacentHTML("beforeend",
-				"<li class=" + (snaps[i].st != 1 ? "viewed" :"''") +
-				" onclick=\"UI.drawSnap('"+snaps[i].id+"');\">" +
-				"<span class=sendPerson>" + snaps[i].sn + "</span>" +
-				"<span class=receiveTime>" + (new Date(snaps[i].ts)) + "</span></li>"
+				"<li class=\"" + Snap.getView(s) + "\"" +
+				" onclick=\"UI.drawSnap('"+s.id+"');\">" +
+				"<div class=sendPerson>" + (s.sn ? s.sn : s.rp) + "</div>" +
+				"<div class=receiveTime>" + timePassed(s.ts) + "</div></li>"
 			);
 		}
 	};
@@ -93,6 +135,7 @@ var UI = new function() {
 		};
 		img.src = uri;
 	};
+
 	this.logout = function() {
 		localStorage.clear();
 		location.reload();
@@ -110,10 +153,34 @@ var Snap = new function() {
 		return {user: this.info.username, phone: this.info.snapchat_phone_number};
 	};
 	this.getFriends = function() {
-		return this.info.friends;
+		return {friends: this.info.friends, best: this.info.bests, recent: this.info.recents};
 	};
 	this.getSnaps = function() {
 		return this.info.snaps;
+	};
+	this.friendSort = function(a,b) {
+		a = (a.display ? a.display : a.name).toLowerCase();
+		b = (b.display ? b.display : b.name).toLowerCase();
+		return a < b ? -1 : (a > b ? 1 : 0);
+	};
+	this.getView = function(snap) {
+		var view = "";
+		if (snap.sn)
+			view += "received-";
+		else if (snap.rp)
+			view += "sent-";
+		else
+			console.log("snap not found: ", snap);
+		if (snap.st == 1)
+			view += "closed";
+		else if (snap.st == 2)
+			view += "open";
+		else if (snap.st == 3)
+			view += "screenshot";
+		else
+			console.log("st not found: ", snap.st);
+		return view;
+		// I don't think this handles friend adds.
 	};
 };
 

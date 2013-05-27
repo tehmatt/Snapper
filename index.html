@@ -7,8 +7,8 @@
 	</script>
 </head>
 <body>
-	<div id="login">
-		<img id="loginLogo" src="logo.png" alt="Snapper">
+	<div id="login" class="major">
+		<img id="loginLogo" src="assets/logo-nobg.png" alt="Snapper">
 		<div id="loginHeader">
 			Snapper
 		</div>
@@ -20,23 +20,50 @@
 		</form>
 	</div>
 
-	<div id="application">
-		<ul id="snapList">
-			<li><div class=header>Received Snapchats</div></li>
+	<div id="friends" class="major">
+		<ul id="friendsAll">
+			<li class=header>Friend List</li>
 		</ul>
-		<div id=image>
-			<canvas></canvas>
+	</div>
+
+	<div id="snapchats" class="major">
+		<ul id="snapsAll">
+			<li class=header>Received Snaps</div></li>
+		</ul>
+	</div>
+
+	<div id="settings" class="major">
+		settings
+	</div>
+
+	<div id="camera" class="major">
+		<div id="cameraView">
+			Camera goes here.
 		</div>
-		<ul id="friendList">
-			<li><div class=header>Friend List</div></li>
-		</ul>
-		<div id=logout onclick="UI.logout();">
-			Logout
+		<div id="snapsLink" class="button">
+			snaps
+		</div>
+		<div id="captureImage" class="button">
+			take picture
+		</div>
+		<div id="settingsLink" class="button">
+			Settings
+		</div>
+		<div id="friendsLink" class="button">
+			Friends
+		</div>
+		<div id="logout" class="button">
+			Log
 		</div>
 	</div>
 
+	<div id="image">
+		<canvas></canvas>
+	</div>
+
+
 </body>
-<script type="text/javascript" src="snap.js"></script>
+<script type="text/javascript" src="snapper.js"></script>
 <script type="text/javascript">
 	UI.login();
 	</script>

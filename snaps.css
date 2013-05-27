@@ -1,0 +1,54 @@
+#snapchats {
+	background-color: #C1D6FF;
+}
+
+#snapchats .header {
+	font-weight: bold;
+	font-size: 24px;
+	text-shadow: 1px 1px #444;
+	text-align: center;
+	background-color: #CCC;
+}
+
+#snapchats ul {
+	list-style: none inside none;
+	padding: 0;
+	margin: 0;
+}
+
+#snapchats li {
+	font-size: 18px;
+	padding: 8px 8px 8px 60px;
+	border-bottom: 1px solid #BBB;
+	overflow: hidden;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+	background-position: 5px;
+	background-repeat: no-repeat;
+}
+
+#snapchats .sendPerson {
+	font-weight: bold;
+	padding-right: 5pt;
+}
+
+#snapchats .receiveTime {
+	text-align: left;
+	font-style: italic;
+}
+
+#snapchats .sent-closed {
+	background-image: url("assets/sent-closed.png");
+}
+#snapchats .sent-open {
+	background-image: url("assets/sent-open.png");
+}
+#snapchats .sent-screenshot {
+	background-image: url("assets/sent-screenshot.png");
+}
+#snapchats .received-closed {
+	background-image: url("assets/received-closed.png");
+}
+#snapchats .received-open {
+	background-image: url("assets/received-open.png");
+}
