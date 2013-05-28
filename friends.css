@@ -28,9 +28,6 @@
 }
 
 #friends .expand {
-	float: right;
 	background-color: #F00;
-	height: 100%;
-	width: 30px;
 	cursor: pointer;
 }
