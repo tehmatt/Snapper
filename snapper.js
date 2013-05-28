@@ -120,6 +120,7 @@ var UI = new function() {
 			if (Snap.getUserInfo().user == f.name)
 				continue;
 			var li = document.createElement("li");
+			li.id = "friendList" + f.name;
 			li.onclick = function() { UI.friendExpand(f.name) };
 			var display = document.createElement("span");
 			display.className = "friend";
@@ -133,6 +134,7 @@ var UI = new function() {
 			}
 			var expand = document.createElement("div");
 			expand.id = "expand" + f.name;
+			expand.className = "expand";
 			expand.innerHTML = (f.display ? f.display : f.name);
 			var edit = document.createElement("input");
 			edit.id = "text" + f.name;
@@ -169,11 +171,12 @@ var UI = new function() {
 		}
 	};
 
-	this.friendExpand = function(id) {
+	this.friendExpand = function(name) {
+		console.log("expanding");
 		var friends = Snap.getFriends();
 		for (var i = 0; i < friends.length; i++) {
 			var f = friends[i];
-			document.getElementById("expand" + f.name).style.height = (f.name == id ? 128 : 32);
+			document.getElementById("friendList" + f.name).style.height = (f.name === name ? 128 + "px" : "");
 		}
 	};
 
