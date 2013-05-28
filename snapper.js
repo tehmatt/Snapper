@@ -120,7 +120,7 @@ var UI = new function() {
 			if (Snap.getUserInfo().user == f.name)
 				continue;
 			var li = document.createElement("li");
-			li.onclick = function() { UI.friendAction(f.id) };
+			li.onclick = function() { UI.friendAction(f.name) };
 			var display = document.createElement("span");
 			display.className = "friend";
 			display.innerHTML = (f.display ? f.display : f.name);
@@ -132,18 +132,18 @@ var UI = new function() {
 				li.appendChild(name);
 			}
 			var expand = document.createElement("div");
-			expand.id = "expand" + f.id;
+			expand.id = "expand" + f.name;
 			expand.innerHTML = (f.display ? f.display : f.name);
 			var edit = document.createElement("input");
-			edit.id = "text" + f.id;
+			edit.id = "text" + f.name;
 			edit.type = "text";
 			edit.value = (f.display ? f.display : "");
 			edit.placeholder = "Name";
 			expand.appendChild(edit);
 			var saveElem = document.createElement("div");
-			saveElem.onclick = function() { UI.friend(f.id, "save"); };
+			saveElem.onclick = function() { UI.friend(f.name, "save"); };
 			var deleteElem = document.createElement("div");
-			deleteElem.onclick = function() { UI.friend(f.id, "delete"); };
+			deleteElem.onclick = function() { UI.friend(f.name, "delete"); };
 			expand.appendChild(saveElem);
 			expand.appendChild(deleteElem);
 			li.appendChild(expand);
@@ -171,7 +171,7 @@ var UI = new function() {
 		var friends = Snap.getFriends();
 		for (var i = 0; i < friends.length; i++) {
 			var f = friends[i];
-			document.getElementById("expand" + f.id).style.display = (f.id == id ? "block" : "none");
+			document.getElementById("expand" + f.name).style.display = (f.name == id ? "block" : "none");
 		}
 	};
 
