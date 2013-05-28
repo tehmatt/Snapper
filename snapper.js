@@ -129,8 +129,8 @@ var UI = new function() {
 				"<div id=expand" + f.id + ">" + (f.display ? f.display : f.name) + "\n" +
 				"Name:" + "<input id='text" + f.id + "'type=\"text\" defaultValue='" +
 				(f.display ? f.display : "") + "'>\n" +
-				"<span onclick=\"UI.friend('"+ f.id + ", save');\"></span>\n" +
-				"<span onclick=\"UI.friend('" + f.id + ", delete');\"></span>" +
+				"<span onclick=\"UI.friend('"+ f.id + ", save');\">Save changes</span>\n" +
+				"<span onclick=\"UI.friend('" + f.id + ", delete');\">Delete</span>" +
 				"</div>" +
 				"</li>"
 			);
