@@ -3,6 +3,7 @@ html, body {
 	margin: 0;
 	padding: 0;
 	overflow: hidden;
+	font-family: "Segoe UI";
 }
 
 .major {
@@ -14,9 +15,29 @@ html, body {
 	overflow-y: auto;
 }
 
+.header {
+	font-weight: bold;
+	font-size: 28px;
+	text-shadow: 1px 1px #444;
+	text-align: center;
+	background-color: #709E2D;
+	height: 50px;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	overflow: hidden;
+	line-height: 50px;
+}
+
 #displaySnap {
 	z-index: 100;
-	background-color: #F0F;
+	overflow: hidden;
+}
+
+#displaySnap img {
+	height: 100%;
+	width: 100%;
+	margin: 0;
+	padding: 0;
 }
 
 #displaySnap .ticker {

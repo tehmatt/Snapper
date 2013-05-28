@@ -20,7 +20,7 @@ function timePassed(start) {
 	var now = new Date();
 	var pass = new Date(now.getTime() - start.getTime());
 	var months = [ "January", "February", "March", "April", "May", "June",
-					   "July", "August", "September", "October", "November", "December" ];
+		"July", "August", "September", "October", "November", "December" ];
 	if (pass.getUTCFullYear() > 1970 || pass.getUTCMonth() > 0 || pass.getUTCDate() > 7)
 		return months[start.getUTCMonth()] + " " + start.getUTCDate() + ", "+ start.getUTCFullYear();
 	if (pass.getUTCDate() > 1)
@@ -80,13 +80,9 @@ var UI = new function() {
 
 	this.displaySnap = function(uri, time) {
 		var div = document.getElementById('displaySnap');
-		var ctx = div.getElementsByTagName("canvas")[0].getContext('2d');
 		var img = new Image;
 		img.onload = function(){
 			UI.displaySection("displaySnap");
-			ctx.canvas.width = img.width;
-			ctx.canvas.height = img.height;
-			ctx.drawImage(img, 0, 0);
 			div.children[0].innerHTML = time;
 			var timeLeft = setInterval(function() {
 				time--;
@@ -95,21 +91,22 @@ var UI = new function() {
 			setTimeout(function() {
 				clearInterval(timeLeft);
 				UI.displaySection("snapchats");
-				ctx.canvas.width = ctx.canvas.width;
+				div.removeChild(img);
 			}, time*1000);
 		};
 		img.src = uri;
+		div.appendChild(img);
 	};
 
 	this.initCamera = function() {
 		document.getElementById("snapsLink").addEventListener("click",
-			function() {UI.displaySection("snapchats")}, false);
+				function() {UI.displaySection("snapchats")}, false);
 		document.getElementById("captureImage").addEventListener("click",
-			function() {alert("Picture taken");}, false);
+				function() {alert("Picture taken");}, false);
 		document.getElementById("settingsLink").addEventListener("click",
-			function() {UI.displaySection("settings")}, false);
+				function() {UI.displaySection("settings")}, false);
 		document.getElementById("friendsLink").addEventListener("click",
-			function() {UI.displaySection("friends")}, false);
+				function() {UI.displaySection("friends")}, false);
 		document.getElementById("logout").addEventListener("click", UI.logout, false);
 	};
 
@@ -122,19 +119,35 @@ var UI = new function() {
 			var f = friends[i];
 			if (Snap.getUserInfo().user == f.name)
 				continue;
-			friendList.insertAdjacentHTML("beforeend",
-				"<li onclick=\"UI.friendAction('"f.id"');\">" +
-				" <span class=friend>" + (f.display ? f.display : f.name) + "</span>" +
-				(f.display ? "<span class=friendAlt>(" + f.name + ")</span>" : "") +
-				"<div id=expand" + f.id + ">" + (f.display ? f.display : f.name) + "\n" +
-				"Name:" + "<input id='text" + f.id + "'type=\"text\" defaultValue='" +
-				(f.display ? f.display : "") + "'>\n" +
-				"<span onclick=\"UI.friend('"+ f.id + ", save');\">Save changes</span>\n" +
-				"<span onclick=\"UI.friend('" + f.id + ", delete');\">Delete</span>" +
-				"</div>" +
-				"</li>"
-			);
-			// This is terrible, but I think it works.
+			var li = document.createElement("li");
+			li.onclick = function() { UI.friendAction(f.id) };
+			var display = document.createElement("span");
+			display.className = "friend";
+			display.innerHTML = (f.display ? f.display : f.name);
+			li.appendChild(display);
+			if (f.display) {
+				var name = document.createElement("span");
+				name.className = "friendAlt";
+				name.innerHTML = f.name;
+				li.appendChild(name);
+			}
+			var expand = document.createElement("div");
+			expand.id = "expand" + f.id;
+			expand.innerHTML = (f.display ? f.display : f.name);
+			var edit = document.createElement("input");
+			edit.id = "text" + f.id;
+			edit.type = "text";
+			edit.value = (f.display ? f.display : "");
+			edit.placeholder = "Name";
+			expand.appendChild(edit);
+			var saveElem = document.createElement("div");
+			saveElem.onclick = function() { UI.friend(f.id, "save"); };
+			var deleteElem = document.createElement("div");
+			deleteElem.onclick = function() { UI.friend(f.id, "delete"); };
+			expand.appendChild(saveElem);
+			expand.appendChild(deleteElem);
+			li.appendChild(expand);
+			friendList.appendChild(li);
 		}
 	};
 
@@ -146,18 +159,19 @@ var UI = new function() {
 			var s = snaps[i];
 			var view = Snap.getView(s);
 			snapList.insertAdjacentHTML("beforeend",
-				"<li class=\"" + view + "\"" +
-				(view === "received-closed" ? " onclick=\"UI.drawSnap('"+s.id+"',"+s.t+");\">" : ">") +
-				"<div class=sendPerson>" + (s.sn ? s.sn : s.rp) + "</div>" +
-				"<div class=receiveTime>" + timePassed(s.ts) + "</div></li>"
-			);
+					"<li class=\"" + view + "\"" +
+					(view === "received-image-closed" ? " onclick=\"UI.drawSnap('"+s.id+"',"+s.t+");\">" : ">") +
+					"<div class=sendPerson>" + (s.sn ? s.sn : s.rp) + "</div>" +
+					"<div class=receiveTime>" + timePassed(s.ts) + Snap.getAction(s) + "</div></li>"
+					);
 		}
 	};
 
 	this.friendAction = function(id) {
-		for (var i = 0; i < snaps.length; i++) {
+		var friends = Snap.getFriends();
+		for (var i = 0; i < friends.length; i++) {
 			var f = friends[i];
-			document.getElementById("expand" + f.id).style.display = f.id == id ? "block" : "none";
+			document.getElementById("expand" + f.id).style.display = (f.id == id ? "block" : "none");
 		}
 	};
 
@@ -169,22 +183,15 @@ var UI = new function() {
 			Backend.friend(id, "");
 	};
 
-	this.drawImage = function(uri) {
-		var ctx = document.getElementById("image").getElementsByTagName("canvas")[0].getContext("2d");
-		var img = new Image;
-		img.onload = function() {
-			ctx.canvas.width = img.width;
-			ctx.canvas.height = img.height;
-			ctx.drawImage(img, 0, 0);
-		};
-		img.src = uri;
 	this.drawSnap = function(id, t) {
 		Backend.getSnap(id, function(x){UI.displaySnap(x,t)});
 	};
 
 	this.logout = function() {
-		localStorage.clear();
-		location.reload();
+		if (confirm("Are you sure you want to logout?")) {
+			localStorage.clear();
+			location.reload();
+		}
 	};
 };
 
@@ -211,24 +218,45 @@ var Snap = new function() {
 	};
 	this.getView = function(snap) {
 		var view = "";
-		if (snap.sn)
+		if (snap.m == 3)
+			return "friend-request";
+		if (snap.sn) {
 			view += "received-";
+			if (snap.m == 0)
+				view += "image-";
+			else if (snap.m == 1)
+				view += "video-";
+		}
 		else if (snap.rp)
 			view += "sent-";
-		else
-			console.log("snap not found: ", snap);
 		if (snap.st == 1)
 			view += "closed";
-		else if (snap.st == 2)
-			view += "open";
-		else if (snap.st == 3)
+		else if (snap.st == 3 && snap.rp)
 			view += "screenshot";
-		else {
-			view += "friend-request";
-			console.log("st not found: ", snap.st, " with view: ", view);
-		}
+		else
+			view += "open";
 		return view;
-		// I don't think this handles friend adds.
+	};
+	this.getAction = function(snap) {
+		switch(this.getView(snap)) {
+			case "friend-request":
+				return " - Added you";
+			case "sent-closed":
+				return " - Delivered";
+			case "sent-open":
+				return " - Opened";
+			case "sent-screenshot":
+				return " - Took a Screenshot!";
+			case "received-image-open":
+			case "received-video-open":
+				return " - Viewed";
+			case "received-image-closed":
+				return " - Unopened";
+			case "received-video-closed":
+				return " - Unwatched";
+			default:
+				return "";
+		}
 	};
 };
 
@@ -268,7 +296,14 @@ var Backend = new function() {
 		req.open("POST", "http://win8.mbryant.tk/api.php?call=friend", true);
 		req.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
 		req.send("friend="+id+"&name="+name);
-		// I have no idea what to do here
+		// What to do here:  (a) needs an action sent somewhere I assume, (b) needs auth_token I assume
+		//					 (c) the function below is an continuation.  This call is async, so it's called on completion.
+		//					 (d) therefore, you must pass in the callback function to it.
+		//					 (e) when you open the request, if you set the 3rd parameter to false, it's not async. see example of Backend.login
+		req.onreadystatechange = function() {
+			if (req.readyState == 4 && req.status == 200)
+				callback(req.responseText);
+		};
 	};
 
 };
