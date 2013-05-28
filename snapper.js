@@ -80,13 +80,9 @@ var UI = new function() {
 
 	this.displaySnap = function(uri, time) {
 		var div = document.getElementById('displaySnap');
-		var ctx = div.getElementsByTagName("canvas")[0].getContext('2d');
 		var img = new Image;
 		img.onload = function(){
 			UI.displaySection("displaySnap");
-			ctx.canvas.width = img.width;
-			ctx.canvas.height = img.height;
-			ctx.drawImage(img, 0, 0);
 			div.children[0].innerHTML = time;
 			var timeLeft = setInterval(function() {
 				time--;
@@ -95,10 +91,11 @@ var UI = new function() {
 			setTimeout(function() {
 				clearInterval(timeLeft);
 				UI.displaySection("snapchats");
-				ctx.canvas.width = ctx.canvas.width;
+				div.removeChild(img);
 			}, time*1000);
 		};
 		img.src = uri;
+		div.appendChild(img);
 	};
 
 	this.initCamera = function() {
@@ -150,8 +147,10 @@ var UI = new function() {
 	};
 
 	this.logout = function() {
-		localStorage.clear();
-		location.reload();
+		if (confirm("Are you sure you want to logout?")) {
+			localStorage.clear();
+			location.reload();
+		}
 	};
 };
 
@@ -183,19 +182,16 @@ var Snap = new function() {
 		else if (snap.rp)
 			view += "sent-";
 		else
-			console.log("snap not found: ", snap);
+			alert("Snap not classified: " + snap);
 		if (snap.st == 1)
 			view += "closed";
 		else if (snap.st == 2)
 			view += "open";
 		else if (snap.st == 3)
 			view += "screenshot";
-		else {
-			view += "friend-request";
-			console.log("st not found: ", snap.st, " with view: ", view);
-		}
+		if (snap.m == 3)
+			view = "friend-request";
 		return view;
-		// I don't think this handles friend adds.
 	};
 };
 

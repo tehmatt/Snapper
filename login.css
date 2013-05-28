@@ -6,6 +6,8 @@
 
 #loginLogo {
 	margin-top: 50px;
+	width: 220px;
+	height: 196px;
 }
 
 #loginHeader {
@@ -29,7 +31,7 @@
 .loginInput {
 	margin: 0 40px;
 	padding: 2px 5px;
-	width: 390px;
+	width: calc(100% - 90px);
 	height: 32px;
 	line-height: 32px;
 	border: 0;
@@ -47,6 +49,6 @@
 
 #loginSubmit {
 	background-color: #CCC;
-	width: 400px;
+	width: calc(100% - 80px);
 	padding: 4px 0;
 }
