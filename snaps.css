@@ -52,3 +52,6 @@
 #snapchats .received-open {
 	background-image: url("assets/received-open.png");
 }
+#snapchats .friend-request {
+	background-image: url("assets/friend-request.png");
+}

@@ -177,8 +177,10 @@ var Snap = new function() {
 			view += "open";
 		else if (snap.st == 3)
 			view += "screenshot";
-		else
-			console.log("st not found: ", snap.st);
+		else {
+			view += "friend-request";
+			console.log("st not found: ", snap.st, " with view: ", view);
+		}
 		return view;
 		// I don't think this handles friend adds.
 	};
