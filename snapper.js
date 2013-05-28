@@ -78,6 +78,29 @@ var UI = new function() {
 		document.getElementById(section).style.display = "block";
 	};
 
+	this.displaySnap = function(uri, time) {
+		var div = document.getElementById('displaySnap');
+		var ctx = div.getElementsByTagName("canvas")[0].getContext('2d');
+		var img = new Image;
+		img.onload = function(){
+			UI.displaySection("displaySnap");
+			ctx.canvas.width = img.width;
+			ctx.canvas.height = img.height;
+			ctx.drawImage(img, 0, 0);
+			div.children[0].innerHTML = time;
+			var timeLeft = setInterval(function() {
+				time--;
+				div.children[0].innerHTML = time;
+			}, 1000);
+			setTimeout(function() {
+				clearInterval(timeLeft);
+				UI.displaySection("snapchats");
+				ctx.canvas.width = ctx.canvas.width;
+			}, time*1000);
+		};
+		img.src = uri;
+	};
+
 	this.initCamera = function() {
 		document.getElementById("snapsLink").addEventListener("click",
 			function() {UI.displaySection("snapchats")}, false);
@@ -112,28 +135,18 @@ var UI = new function() {
 		var snapList = document.getElementById("snapsAll");
 		for (var i = 0; i < snaps.length; i++) {
 			var s = snaps[i];
+			var view = Snap.getView(s);
 			snapList.insertAdjacentHTML("beforeend",
-				"<li class=\"" + Snap.getView(s) + "\"" +
-				" onclick=\"UI.drawSnap('"+s.id+"');\">" +
+				"<li class=\"" + view + "\"" +
+				(view === "received-closed" ? " onclick=\"UI.drawSnap('"+s.id+"',"+s.t+");\">" : ">") +
 				"<div class=sendPerson>" + (s.sn ? s.sn : s.rp) + "</div>" +
 				"<div class=receiveTime>" + timePassed(s.ts) + "</div></li>"
 			);
 		}
 	};
 
-	this.drawSnap = function(id) {
-		Backend.getSnap(id, UI.drawImage);
-	};
-
-	this.drawImage = function(uri) {
-		var ctx = document.getElementById('image').getElementsByTagName("canvas")[0].getContext('2d');
-		var img = new Image;
-		img.onload = function(){
-			ctx.canvas.width = img.width;
-			ctx.canvas.height = img.height;
-			ctx.drawImage(img, 0, 0);
-		};
-		img.src = uri;
+	this.drawSnap = function(id, t) {
+		Backend.getSnap(id, function(x){UI.displaySnap(x,t)});
 	};
 
 	this.logout = function() {
