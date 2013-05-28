@@ -172,7 +172,7 @@ var UI = new function() {
 		var friends = Snap.getFriends();
 		for (var i = 0; i < friends.length; i++) {
 			var f = friends[i];
-			document.getElementById("expand" + f.name).style.display = (f.name == id ? "block" : "none");
+			document.getElementById("expand" + f.name).style.height = (f.name == id ? 128 : 32);
 		}
 	};
 
