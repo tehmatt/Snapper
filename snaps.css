@@ -35,11 +35,17 @@
 #snapchats .sent-screenshot {
 	background-image: url("assets/sent-screenshot.png");
 }
-#snapchats .received-closed {
-	background-image: url("assets/received-closed.png");
+#snapchats .received-image-closed {
+	background-image: url("assets/received-image-closed.png");
 }
-#snapchats .received-open {
-	background-image: url("assets/received-open.png");
+#snapchats .received-video-closed {
+	background-image: url("assets/received-video-closed.png");
+}
+#snapchats .received-image-open {
+	background-image: url("assets/received-image-open.png");
+}
+#snapchats .received-video-open {
+	background-image: url("assets/received-video-open.png");
 }
 #snapchats .friend-request {
 	background-image: url("assets/friend-request.png");

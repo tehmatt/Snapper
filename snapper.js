@@ -20,7 +20,7 @@ function timePassed(start) {
 	var now = new Date();
 	var pass = new Date(now.getTime() - start.getTime());
 	var months = [ "January", "February", "March", "April", "May", "June",
-					   "July", "August", "September", "October", "November", "December" ];
+		"July", "August", "September", "October", "November", "December" ];
 	if (pass.getUTCFullYear() > 1970 || pass.getUTCMonth() > 0 || pass.getUTCDate() > 7)
 		return months[start.getUTCMonth()] + " " + start.getUTCDate() + ", "+ start.getUTCFullYear();
 	if (pass.getUTCDate() > 1)
@@ -100,13 +100,13 @@ var UI = new function() {
 
 	this.initCamera = function() {
 		document.getElementById("snapsLink").addEventListener("click",
-			function() {UI.displaySection("snapchats")}, false);
+				function() {UI.displaySection("snapchats")}, false);
 		document.getElementById("captureImage").addEventListener("click",
-			function() {alert("Picture taken");}, false);
+				function() {alert("Picture taken");}, false);
 		document.getElementById("settingsLink").addEventListener("click",
-			function() {UI.displaySection("settings")}, false);
+				function() {UI.displaySection("settings")}, false);
 		document.getElementById("friendsLink").addEventListener("click",
-			function() {UI.displaySection("friends")}, false);
+				function() {UI.displaySection("friends")}, false);
 		document.getElementById("logout").addEventListener("click", UI.logout, false);
 	};
 
@@ -120,17 +120,17 @@ var UI = new function() {
 			if (Snap.getUserInfo().user == f.name)
 				continue;
 			friendList.insertAdjacentHTML("beforeend",
-				"<li onclick=\"UI.friendAction('"f.id"');\">" +
-				" <span class=friend>" + (f.display ? f.display : f.name) + "</span>" +
-				(f.display ? "<span class=friendAlt>(" + f.name + ")</span>" : "") +
-				"<div id=expand" + f.id + ">" + (f.display ? f.display : f.name) + "\n" +
-				"Name:" + "<input id='text" + f.id + "'type=\"text\" defaultValue='" +
-				(f.display ? f.display : "") + "'>\n" +
-				"<span onclick=\"UI.friend('"+ f.id + ", save');\"></span>\n" +
-				"<span onclick=\"UI.friend('" + f.id + ", delete');\"></span>" +
-				"</div>" +
-				"</li>"
-			);
+					"<li onclick=\"UI.friendAction('" + f.id + "');\">" +
+					" <span class=friend>" + (f.display ? f.display : f.name) + "</span>" +
+					(f.display ? "<span class=friendAlt>(" + f.name + ")</span>" : "") +
+					"<div id=expand" + f.id + ">" + (f.display ? f.display : f.name) + "\n" +
+					"Name:" + "<input id='text" + f.id + "'type=\"text\" defaultValue='" +
+					(f.display ? f.display : "") + "'>\n" +
+					"<span onclick=\"UI.friend('"+ f.id + ", save');\"></span>\n" +
+					"<span onclick=\"UI.friend('" + f.id + ", delete');\"></span>" +
+					"</div>" +
+					"</li>"
+					);
 			// This is terrible, but I think it works.
 		}
 	};
@@ -143,18 +143,19 @@ var UI = new function() {
 			var s = snaps[i];
 			var view = Snap.getView(s);
 			snapList.insertAdjacentHTML("beforeend",
-				"<li class=\"" + view + "\"" +
-				(view === "received-closed" ? " onclick=\"UI.drawSnap('"+s.id+"',"+s.t+");\">" : ">") +
-				"<div class=sendPerson>" + (s.sn ? s.sn : s.rp) + "</div>" +
-				"<div class=receiveTime>" + timePassed(s.ts) + "</div></li>"
-			);
+					"<li class=\"" + view + "\"" +
+					(view === "received-image-closed" ? " onclick=\"UI.drawSnap('"+s.id+"',"+s.t+");\">" : ">") +
+					"<div class=sendPerson>" + (s.sn ? s.sn : s.rp) + "</div>" +
+					"<div class=receiveTime>" + timePassed(s.ts) + Snap.getAction(s) + "</div></li>"
+					);
 		}
 	};
 
 	this.friendAction = function(id) {
-		for (var i = 0; i < snaps.length; i++) {
+		var friends = Snap.getFriends();
+		for (var i = 0; i < friends.length; i++) {
 			var f = friends[i];
-			document.getElementById("expand" + f.id).style.display = f.id == id ? "block" : "none";
+			document.getElementById("expand" + f.id).style.display = (f.id == id ? "block" : "none");
 		}
 	};
 
@@ -166,15 +167,6 @@ var UI = new function() {
 			Backend.friend(id, "");
 	};
 
-	this.drawImage = function(uri) {
-		var ctx = document.getElementById("image").getElementsByTagName("canvas")[0].getContext("2d");
-		var img = new Image;
-		img.onload = function() {
-			ctx.canvas.width = img.width;
-			ctx.canvas.height = img.height;
-			ctx.drawImage(img, 0, 0);
-		};
-		img.src = uri;
 	this.drawSnap = function(id, t) {
 		Backend.getSnap(id, function(x){UI.displaySnap(x,t)});
 	};
@@ -210,21 +202,45 @@ var Snap = new function() {
 	};
 	this.getView = function(snap) {
 		var view = "";
-		if (snap.sn)
+		if (snap.m == 3)
+			return "friend-request";
+		if (snap.sn) {
 			view += "received-";
+			if (snap.m == 0)
+				view += "image-";
+			else if (snap.m == 1)
+				view += "video-";
+		}
 		else if (snap.rp)
 			view += "sent-";
-		else
-			alert("Snap not classified: " + snap);
 		if (snap.st == 1)
 			view += "closed";
-		else if (snap.st == 2)
-			view += "open";
-		else if (snap.st == 3)
+		else if (snap.st == 3 && snap.rp)
 			view += "screenshot";
-		if (snap.m == 3)
-			view = "friend-request";
+		else
+			view += "open";
 		return view;
+	};
+	this.getAction = function(snap) {
+		switch(this.getView(snap)) {
+			case "friend-request":
+				return " - Added you";
+			case "sent-closed":
+				return " - Delivered";
+			case "sent-open":
+				return " - Opened";
+			case "sent-screenshot":
+				return " - Took a Screenshot!";
+			case "received-image-open":
+			case "received-video-open":
+				return " - Viewed";
+			case "received-image-closed":
+				return " - Unopened";
+			case "received-video-closed":
+				return " - Unwatched";
+			default:
+				return "";
+		}
 	};
 };
 
