@@ -119,19 +119,35 @@ var UI = new function() {
 			var f = friends[i];
 			if (Snap.getUserInfo().user == f.name)
 				continue;
-			friendList.insertAdjacentHTML("beforeend",
-					"<li onclick=\"UI.friendAction('" + f.id + "');\">" +
-					" <span class=friend>" + (f.display ? f.display : f.name) + "</span>" +
-					(f.display ? "<span class=friendAlt>(" + f.name + ")</span>" : "") +
-					"<div id=expand" + f.id + ">" + (f.display ? f.display : f.name) + "\n" +
-					"Name:" + "<input id='text" + f.id + "'type=\"text\" defaultValue='" +
-					(f.display ? f.display : "") + "'>\n" +
-					"<span onclick=\"UI.friend('"+ f.id + ", save');\"></span>\n" +
-					"<span onclick=\"UI.friend('" + f.id + ", delete');\"></span>" +
-					"</div>" +
-					"</li>"
-					);
-			// This is terrible, but I think it works.
+			var li = document.createElement("li");
+			li.onclick = function() { UI.friendAction(f.id) };
+			var display = document.createElement("span");
+			display.className = "friend";
+			display.innerHTML = (f.display ? f.display : f.name);
+			li.appendChild(display);
+			if (f.display) {
+				var name = document.createElement("span");
+				name.className = "friendAlt";
+				name.innerHTML = f.name;
+				li.appendChild(name);
+			}
+			var expand = document.createElement("div");
+			expand.id = "expand" + f.id;
+			expand.innerHTML = (f.display ? f.display : f.name);
+			var edit = document.createElement("input");
+			edit.id = "text" + f.id;
+			edit.type = "text";
+			edit.value = (f.display ? f.display : "");
+			edit.placeholder = "Name";
+			expand.appendChild(edit);
+			var saveElem = document.createElement("div");
+			saveElem.onclick = function() { UI.friend(f.id, "save"); };
+			var deleteElem = document.createElement("div");
+			deleteElem.onclick = function() { UI.friend(f.id, "delete"); };
+			expand.appendChild(saveElem);
+			expand.appendChild(deleteElem);
+			li.appendChild(expand);
+			friendList.appendChild(li);
 		}
 	};
 
@@ -280,7 +296,14 @@ var Backend = new function() {
 		req.open("POST", "http://win8.mbryant.tk/api.php?call=friend", true);
 		req.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
 		req.send("friend="+id+"&name="+name);
-		// I have no idea what to do here
+		// What to do here:  (a) needs an action sent somewhere I assume, (b) needs auth_token I assume
+		//					 (c) the function below is an continuation.  This call is async, so it's called on completion.
+		//					 (d) therefore, you must pass in the callback function to it.
+		//					 (e) when you open the request, if you set the 3rd parameter to false, it's not async. see example of Backend.login
+		req.onreadystatechange = function() {
+			if (req.readyState == 4 && req.status == 200)
+				callback(req.responseText);
+		};
 	};
 
 };
