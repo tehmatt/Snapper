@@ -38,6 +38,14 @@ case 'getSnap':
 case 'sendSnap':
 	echo '{}';
 	break;
+case 'friend':
+	$friend = isset($_POST['friend']) ? $_POST['friend'] : '';
+	$name = isset($_POST['name']) ? $_POST['name'] : NULL;
+	$action = ($name == NULL) ? 'delete' : 'display';
+	$s = new Snaphax();
+	$s->friend($action, $friend, $name);
+	// This is terrible.
+	break;
 default:
 	echo '{"message": "Invalid api call!"}';
 	break;

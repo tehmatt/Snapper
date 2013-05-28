@@ -100,9 +100,18 @@ var UI = new function() {
 			if (Snap.getUserInfo().user == f.name)
 				continue;
 			friendList.insertAdjacentHTML("beforeend",
-				"<li><span class=friend>" + (f.display ? f.display : f.name) + "</span>" +
-				(f.display ? "<span class=friendAlt>(" + f.name + ")</span>" : "") + "</li>"
+				"<li onclick=\"UI.friendAction('"f.id"');\">" +
+				" <span class=friend>" + (f.display ? f.display : f.name) + "</span>" +
+				(f.display ? "<span class=friendAlt>(" + f.name + ")</span>" : "") +
+				"<div id=expand" + f.id + ">" + (f.display ? f.display : f.name) + "\n" +
+				"Name:" + "<input id='text" + f.id + "'type=\"text\" defaultValue='" +
+				(f.display ? f.display : "") + "'>\n" +
+				"<span onclick=\"UI.friend('"+ f.id + ", save');\"></span>\n" +
+				"<span onclick=\"UI.friend('" + f.id + ", delete');\"></span>" +
+				"</div>" +
+				"</li>"
 			);
+			// This is terrible, but I think it works.
 		}
 	};
 
@@ -121,14 +130,29 @@ var UI = new function() {
 		}
 	};
 
+	this.friendAction = function(id) {
+		for (var i = 0; i < snaps.length; i++) {
+			var f = friends[i];
+			document.getElementById("expand" + f.id).style.display = f.id == id ? "block" : "none";
+		}
+	};
+
+	this.friend = function(id, action) {
+		if (action == "save") {
+			Backend.friend(id, document.getElementById("text" + id).value);
+		}
+		else
+			Backend.friend(id, "");
+	};
+
 	this.drawSnap = function(id) {
 		Backend.getSnap(id, UI.drawImage);
 	};
 
 	this.drawImage = function(uri) {
-		var ctx = document.getElementById('image').getElementsByTagName("canvas")[0].getContext('2d');
+		var ctx = document.getElementById("image").getElementsByTagName("canvas")[0].getContext("2d");
 		var img = new Image;
-		img.onload = function(){
+		img.onload = function() {
 			ctx.canvas.width = img.width;
 			ctx.canvas.height = img.height;
 			ctx.drawImage(img, 0, 0);
@@ -205,6 +229,7 @@ var Backend = new function() {
 			return null;
 		}
 	};
+
 	this.getSnap = function(id, callback) {
 		var req = new XMLHttpRequest();
 		req.open("POST", "http://win8.mbryant.tk/api.php?call=getSnap", true);
@@ -215,4 +240,13 @@ var Backend = new function() {
 				callback(req.responseText);
 		};
 	};
+
+	this.friend = function(id, name) {
+		var req = new XMLHttpRequest();
+		req.open("POST", "http://win8.mbryant.tk/api.php?call=friend", true);
+		req.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+		req.send("friend="+id+"&name="+name);
+		// I have no idea what to do here
+	};
+
 };
