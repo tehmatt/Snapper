@@ -120,7 +120,7 @@ var UI = new function() {
 			if (Snap.getUserInfo().user == f.name)
 				continue;
 			var li = document.createElement("li");
-			li.onclick = function() { UI.friendAction(f.name) };
+			li.onclick = function() { UI.friendExpand(f.name) };
 			var display = document.createElement("span");
 			display.className = "friend";
 			display.innerHTML = (f.display ? f.display : f.name);
@@ -167,7 +167,7 @@ var UI = new function() {
 		}
 	};
 
-	this.friendAction = function(id) {
+	this.friendExpand = function(id) {
 		var friends = Snap.getFriends();
 		for (var i = 0; i < friends.length; i++) {
 			var f = friends[i];
