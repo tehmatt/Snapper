@@ -133,6 +133,7 @@ var UI = new function() {
 			}
 			var expand = document.createElement("div");
 			expand.id = "expand" + f.name;
+			expand.className = "expand";
 			expand.innerHTML = (f.display ? f.display : f.name);
 			var edit = document.createElement("input");
 			edit.id = "text" + f.name;
