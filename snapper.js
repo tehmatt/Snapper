@@ -142,8 +142,10 @@ var UI = new function() {
 			expand.appendChild(edit);
 			var saveElem = document.createElement("div");
 			saveElem.onclick = function() { UI.friend(f.name, "save"); };
+			saveElem.innerHTML = "Save changes";
 			var deleteElem = document.createElement("div");
 			deleteElem.onclick = function() { UI.friend(f.name, "delete"); };
+			deleteElem.innerHTML = "Delete":
 			expand.appendChild(saveElem);
 			expand.appendChild(deleteElem);
 			li.appendChild(expand);
