@@ -117,11 +117,10 @@ var UI = new function() {
 		var friendList = document.getElementById("friendsAll");
 		for (var i = 0; i < friends.length; i++) {
 			var f = friends[i];
-			if (Snap.getUserInfo().user == f.name)
-				continue;
 			var li = document.createElement("li");
 			li.id = "friendList" + f.name;
-			li.onclick = function() { UI.friendExpand(f.name) };
+			var fn = function(x) { return function() { UI.friendExpand(x); }; };
+			li.onclick = fn(f.name);
 			var display = document.createElement("span");
 			display.className = "friend";
 			display.innerHTML = (f.display ? f.display : f.name);
@@ -143,11 +142,12 @@ var UI = new function() {
 			edit.placeholder = "Name";
 			expand.appendChild(edit);
 			var saveElem = document.createElement("div");
-			saveElem.onclick = function() { UI.friend(f.name, "save"); };
+			var fn = function(x,y) { return function() { UI.friend(x,y); }; };
+			saveElem.onclick = fn(f.name, "save");
 			saveElem.innerHTML = "Save changes";
 			var deleteElem = document.createElement("div");
-			deleteElem.onclick = function() { UI.friend(f.name, "delete"); };
-			deleteElem.innerHTML = "Delete":
+			deleteElem.onclick = fn(f.name, "delete");
+			deleteElem.innerHTML = "Delete";
 			expand.appendChild(saveElem);
 			expand.appendChild(deleteElem);
 			li.appendChild(expand);
@@ -172,20 +172,23 @@ var UI = new function() {
 	};
 
 	this.friendExpand = function(name) {
-		console.log("expanding");
-		var friends = Snap.getFriends();
+		var allFriends = Snap.getFriends();
+		var friends = allFriends.friends.sort(Snap.friendSort);
 		for (var i = 0; i < friends.length; i++) {
 			var f = friends[i];
-			document.getElementById("friendList" + f.name).style.height = (f.name === name ? 128 + "px" : "");
+			document.getElementById("friendList" + f.name).style.height = (f.name === name ? 128 + "px"  : "");
 		}
 	};
 
 	this.friend = function(id, action) {
 		if (action == "save") {
-			Backend.friend(id, document.getElementById("text" + id).value);
+			console.log("saving " + id + " with name " + document.getElementById("text" + id).value);
+			Backend.friend(id, document.getElementById("text" + id).value, function(x) {console.log(x);});
 		}
-		else
-			Backend.friend(id, "");
+		else {
+			console.log("deleting " + id);
+			Backend.friend(id, "", function(x) {console.log(x);});
+		}
 	};
 
 	this.drawSnap = function(id, t) {
@@ -211,7 +214,8 @@ var Snap = new function() {
 		return {user: this.info.username, phone: this.info.snapchat_phone_number};
 	};
 	this.getFriends = function() {
-		return {friends: this.info.friends, best: this.info.bests, recent: this.info.recents};
+		return {friends: this.info.friends.filter(function(elem){return elem.name !== Snap.getUserInfo().user;}),
+				best: this.info.bests, recent: this.info.recents};
 	};
 	this.getSnaps = function() {
 		return this.info.snaps;
@@ -296,11 +300,11 @@ var Backend = new function() {
 		};
 	};
 
-	this.friend = function(id, name) {
+	this.friend = function(id, name, callback) {
 		var req = new XMLHttpRequest();
 		req.open("POST", "http://win8.mbryant.tk/api.php?call=friend", true);
 		req.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-		req.send("friend="+id+"&name="+name);
+		req.send("friend="+id+"&name="+name+"&auth_token="+Snap.info.auth_token);
 		// What to do here:  (a) needs an action sent somewhere I assume, (b) needs auth_token I assume
 		//					 (c) the function below is an continuation.  This call is async, so it's called on completion.
 		//					 (d) therefore, you must pass in the callback function to it.

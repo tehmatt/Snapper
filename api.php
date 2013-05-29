@@ -42,8 +42,12 @@ case 'friend':
 	$friend = isset($_POST['friend']) ? $_POST['friend'] : '';
 	$name = isset($_POST['name']) ? $_POST['name'] : NULL;
 	$action = ($name == NULL) ? 'delete' : 'display';
-	$s = new Snaphax();
-	$s->friend($action, $friend, $name);
+	$auth_token = isset($_POST['auth_token']) ? $_POST['auth_token'] : '';
+	$s = new Snaphax(array(
+		'auth_token' => $auth_token
+	));
+	$result = $s->friend($action, $friend, $name);
+	echo $result;
 	// This is terrible.
 	break;
 default:
