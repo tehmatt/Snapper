@@ -210,7 +210,10 @@ var UI = new function() {
 				Backend.friendAction(actions[action], name, newName, setFunc);
 				break;
 			case 2:
-				Backend.friendAction(actions[action], newName, "", setFunc);
+				if (Snap.getFriends().friends.every(function(f){return f.name !== newName;}))
+					Backend.friendAction(actions[action], newName, "", setFunc);
+				else
+					alert("You can't add the same friend multiple times!");
 				break;
 		}
 	};
