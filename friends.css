@@ -27,6 +27,15 @@
 	font-style: italic;
 }
 
+#friends .addFriend {
+	padding-left: 60px;
+	font-weight: bold;
+	background-position: 5px;
+	background-repeat: no-repeat;
+	background-size: 45px 40px;
+	background-image: url("assets/friend-request.png");
+}
+
 #friends .expand {
 	margin: 0;
 	padding: 8px;
@@ -60,4 +69,12 @@
 
 #friends .delete {
 	background-color: #EF4868;
+}
+
+#friends .add {
+	background-color: #709E2D;
+}
+
+#friends #expandaddFriendElem {
+	height: 78px;
 }

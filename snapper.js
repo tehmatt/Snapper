@@ -115,7 +115,8 @@ var UI = new function() {
 		var allFriends = Snap.getFriends();
 		var friends = allFriends.friends.sort(Snap.friendSort);
 		var friendList = document.getElementById("friendsAll");
-		friendList.innerHTML = "";
+		friendList.innerHTML = "<li id=\"addfriend\" class=\"addFriend\" onclick=\"UI.friendExpand('addFriendElem');\">Add Friend</li> <li id=\"expandaddFriendElem\" class=\"expand\"> Username: <input type=\"text\" placeholder=\"Username\"> <div class=\"add friendButton\">Add Friend</div> </li>";
+
 		for (var i = 0; i < friends.length; i++) {
 			var f = friends[i];
 			var friendli = document.createElement("li");
@@ -174,11 +175,10 @@ var UI = new function() {
 	};
 
 	this.friendExpand = function(name) {
-		var allFriends = Snap.getFriends();
-		var friends = allFriends.friends.sort(Snap.friendSort);
-		for (var i = 0; i < friends.length; i++) {
-			var f = friends[i];
-			document.getElementById("expand" + f.name).style.display = ((f.name === name && document.getElementById("expand" + f.name).style.display != "block") ? "block" : "none");
+		var expandElems = document.getElementById("friendsAll").getElementsByClassName("expand");
+		for (var i = 0; i < expandElems.length; i++) {
+			var elem = expandElems[i];
+			elem.style.display = ((elem.id == "expand" + name) && elem.style.display != "block") ? "block" : "none";
 		}
 	};
 
