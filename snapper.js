@@ -115,42 +115,44 @@ var UI = new function() {
 		var allFriends = Snap.getFriends();
 		var friends = allFriends.friends.sort(Snap.friendSort);
 		var friendList = document.getElementById("friendsAll");
+		friendList.innerHTML = "";
 		for (var i = 0; i < friends.length; i++) {
 			var f = friends[i];
-			var li = document.createElement("li");
-			li.id = "friendList" + f.name;
+			var friendli = document.createElement("li");
 			var fn = function(x) { return function() { UI.friendExpand(x); }; };
-			li.onclick = fn(f.name);
+			friendli.onclick = fn(f.name);
 			var display = document.createElement("span");
 			display.className = "friend";
 			display.innerHTML = (f.display ? f.display : f.name);
-			li.appendChild(display);
+			friendli.appendChild(display);
 			if (f.display) {
 				var name = document.createElement("span");
 				name.className = "friendAlt";
 				name.innerHTML = f.name;
-				li.appendChild(name);
+				friendli.appendChild(name);
 			}
-			var expand = document.createElement("div");
-			expand.id = "expand" + f.name;
-			expand.className = "expand";
-			expand.innerHTML = (f.display ? f.display : f.name);
+			var li = document.createElement("li");
+			li.id = "expand" + f.name;
+			li.className = "expand";
+			li.innerHTML = "Edit Name:";
 			var edit = document.createElement("input");
 			edit.id = "text" + f.name;
 			edit.type = "text";
 			edit.value = (f.display ? f.display : "");
 			edit.placeholder = "Name";
-			expand.appendChild(edit);
 			var saveElem = document.createElement("div");
-			var fn = function(x,y) { return function() { UI.friend(x,y); }; };
+			var fn = function(x,y) { return function() { UI.friendAction(x,y); }; };
 			saveElem.onclick = fn(f.name, "save");
-			saveElem.innerHTML = "Save changes";
+			saveElem.className = "save friendButton";
+			saveElem.innerHTML = "Save Changes";
 			var deleteElem = document.createElement("div");
 			deleteElem.onclick = fn(f.name, "delete");
+			deleteElem.className = "delete friendButton";
 			deleteElem.innerHTML = "Delete";
-			expand.appendChild(saveElem);
-			expand.appendChild(deleteElem);
-			li.appendChild(expand);
+			li.appendChild(edit);
+			li.appendChild(saveElem);
+			li.appendChild(deleteElem);
+			friendList.appendChild(friendli);
 			friendList.appendChild(li);
 		}
 	};
@@ -176,19 +178,28 @@ var UI = new function() {
 		var friends = allFriends.friends.sort(Snap.friendSort);
 		for (var i = 0; i < friends.length; i++) {
 			var f = friends[i];
-			document.getElementById("friendList" + f.name).style.height = (f.name === name ? 128 + "px"  : "");
+			document.getElementById("expand" + f.name).style.display = ((f.name === name && document.getElementById("expand" + f.name).style.display != "block") ? "block" : "none");
 		}
 	};
 
-	this.friend = function(id, action) {
-		if (action == "save") {
-			console.log("saving " + id + " with name " + document.getElementById("text" + id).value);
-			Backend.friend(id, document.getElementById("text" + id).value, function(x) {console.log(x);});
-		}
-		else {
-			console.log("deleting " + id);
-			Backend.friend(id, "", function(x) {console.log(x);});
-		}
+	this.friendAction = function(name, action) {
+		var save = (action === "save");
+		var newName = document.getElementById("text" + name).value;
+		var setFunc = function(set) {
+			if (set) {
+				if (save)
+					Snap.renameFriend(name, newName);
+				else
+					Snap.removeFriend(name);
+				UI.initFriends();
+			}
+			else
+				alert("Error " + (save ? "saving data." : "deleteing friend."));
+		};
+		if (save)
+			Backend.friendAction(name, newName, setFunc);
+		else if (confirm("Are you sure you want to delete "+ name + "?"))
+			Backend.friendAction(name, "", setFunc);
 	};
 
 	this.drawSnap = function(id, t) {
@@ -210,12 +221,21 @@ var Snap = new function() {
 	this.setLogin = function(info) {
 		this.info = info;
 	};
+	this.getAuth = function() {
+		return this.info.auth_token;
+	};
 	this.getUserInfo = function() {
 		return {user: this.info.username, phone: this.info.snapchat_phone_number};
 	};
 	this.getFriends = function() {
 		return {friends: this.info.friends.filter(function(elem){return elem.name !== Snap.getUserInfo().user;}),
-				best: this.info.bests, recent: this.info.recents};
+			best: this.info.bests, recent: this.info.recents};
+	};
+	this.renameFriend = function(name, newName) {
+		this.info.friends.filter(function(e){return e.name === name;})[0].display = newName;
+	}
+	this.removeFriend = function(name) {
+		this.info.friends = this.info.friends.filter(function(e){return e.name !== name;});
 	};
 	this.getSnaps = function() {
 		return this.info.snaps;
@@ -289,26 +309,28 @@ var Backend = new function() {
 		}
 	};
 
+	// Get snap image from id
 	this.getSnap = function(id, callback) {
 		var req = new XMLHttpRequest();
 		req.open("POST", "http://win8.mbryant.tk/api.php?call=getSnap", true);
 		req.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-		req.send("username="+localStorage["user"]+"&id="+id+"&auth_token="+Snap.info.auth_token);
+		req.send("username="+localStorage["user"]+"&id="+id+"&auth_token="+Snap.getAuth());
 		req.onreadystatechange = function() {
 			if (req.readyState == 4 && req.status == 200)
 				callback(req.responseText);
 		};
 	};
 
-	this.friend = function(id, name, callback) {
+	// Rename friend id to name if name is not null, else delete friend
+	this.friendAction = function(id, name, callback) {
 		var req = new XMLHttpRequest();
+		var data = "username=" + localStorage["user"] +
+			"&friend=" + id +
+			"&name=" + name +
+			"&auth_token=" + Snap.getAuth();
 		req.open("POST", "http://win8.mbryant.tk/api.php?call=friend", true);
 		req.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-		req.send("friend="+id+"&name="+name+"&auth_token="+Snap.info.auth_token);
-		// What to do here:  (a) needs an action sent somewhere I assume, (b) needs auth_token I assume
-		//					 (c) the function below is an continuation.  This call is async, so it's called on completion.
-		//					 (d) therefore, you must pass in the callback function to it.
-		//					 (e) when you open the request, if you set the 3rd parameter to false, it's not async. see example of Backend.login
+		req.send(data);
 		req.onreadystatechange = function() {
 			if (req.readyState == 4 && req.status == 200)
 				callback(req.responseText);

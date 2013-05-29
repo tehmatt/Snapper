@@ -39,16 +39,17 @@ case 'sendSnap':
 	echo '{}';
 	break;
 case 'friend':
+	$username = isset($_POST['username']) ? $_POST['username'] : '';
 	$friend = isset($_POST['friend']) ? $_POST['friend'] : '';
 	$name = isset($_POST['name']) ? $_POST['name'] : NULL;
 	$action = ($name == NULL) ? 'delete' : 'display';
 	$auth_token = isset($_POST['auth_token']) ? $_POST['auth_token'] : '';
 	$s = new Snaphax(array(
+		'username' => $username,
 		'auth_token' => $auth_token
 	));
 	$result = $s->friend($action, $friend, $name);
-	echo $result;
-	// This is terrible.
+	echo ($result['logged'] ? "true" : "false");
 	break;
 default:
 	echo '{"message": "Invalid api call!"}';
