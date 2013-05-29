@@ -115,7 +115,7 @@ var UI = new function() {
 		var allFriends = Snap.getFriends();
 		var friends = allFriends.friends.sort(Snap.friendSort);
 		var friendList = document.getElementById("friendsAll");
-		friendList.innerHTML = "<li id=\"addfriend\" class=\"addFriend\" onclick=\"UI.friendExpand('addFriendElem');\">Add Friend</li> <li id=\"expandaddFriendElem\" class=\"expand\"> Username: <input type=\"text\" placeholder=\"Username\"> <div class=\"add friendButton\">Add Friend</div> </li>";
+		friendList.innerHTML = "<li id=\"addfriend\" class=\"addFriend\" onclick=\"UI.friendExpand('addFriendElem');\">Add Friend</li> <li id=\"expandaddFriendElem\" class=\"expand\"> Username: <input id=\"newFriendName\" type=\"text\" placeholder=\"Username\"> <div class=\"add friendButton\" onclick=\"UI.friendAction('','add')\">Add Friend</div> </li>";
 
 		for (var i = 0; i < friends.length; i++) {
 			var f = friends[i];
@@ -143,7 +143,7 @@ var UI = new function() {
 			edit.placeholder = "Name";
 			var saveElem = document.createElement("div");
 			var fn = function(x,y) { return function() { UI.friendAction(x,y); }; };
-			saveElem.onclick = fn(f.name, "save");
+			saveElem.onclick = fn(f.name, "display");
 			saveElem.className = "save friendButton";
 			saveElem.innerHTML = "Save Changes";
 			var deleteElem = document.createElement("div");
@@ -183,23 +183,36 @@ var UI = new function() {
 	};
 
 	this.friendAction = function(name, action) {
-		var save = (action === "save");
-		var newName = document.getElementById("text" + name).value;
-		var setFunc = function(set) {
-			if (set) {
-				if (save)
-					Snap.renameFriend(name, newName);
-				else
+		var actions = ["delete", "display", "add"]
+		var action = actions.indexOf(action);
+		var newName = action != 2 ? document.getElementById("text" + name).value : document.getElementById("newFriendName").value;
+		var setFunc = function(result) {
+			if (result.logged) {
+				if (action == 0)
 					Snap.removeFriend(name);
+				else if (action == 1)
+					Snap.renameFriend(name, newName);
+				else if (action == 2)
+					Snap.addFriend(result.object);
 				UI.initFriends();
 			}
-			else
-				alert("Error " + (save ? "saving data." : "deleteing friend."));
+			else {
+				var errorMsg = (action == 0 ? "deleting" : (action == 1 ? "updating" : "adding"));
+				alert("Error " + errorMsg + " friend.");
+			}
 		};
-		if (save)
-			Backend.friendAction(name, newName, setFunc);
-		else if (confirm("Are you sure you want to delete "+ name + "?"))
-			Backend.friendAction(name, "", setFunc);
+		switch (action) {
+			case 0:
+				if(confirm("Are you sure you want to delete "+ name + "?"))
+					Backend.friendAction(actions[action], name, "", setFunc);
+				break;
+			case 1:
+				Backend.friendAction(actions[action], name, newName, setFunc);
+				break;
+			case 2:
+				Backend.friendAction(actions[action], newName, "", setFunc);
+				break;
+		}
 	};
 
 	this.drawSnap = function(id, t) {
@@ -236,6 +249,9 @@ var Snap = new function() {
 	}
 	this.removeFriend = function(name) {
 		this.info.friends = this.info.friends.filter(function(e){return e.name !== name;});
+	};
+	this.addFriend = function(friend) {
+		this.info.friends.push(friend);
 	};
 	this.getSnaps = function() {
 		return this.info.snaps;
@@ -322,9 +338,10 @@ var Backend = new function() {
 	};
 
 	// Rename friend id to name if name is not null, else delete friend
-	this.friendAction = function(id, name, callback) {
+	this.friendAction = function(action, id, name, callback) {
 		var req = new XMLHttpRequest();
 		var data = "username=" + localStorage["user"] +
+			"&action=" + action +
 			"&friend=" + id +
 			"&name=" + name +
 			"&auth_token=" + Snap.getAuth();
@@ -333,7 +350,7 @@ var Backend = new function() {
 		req.send(data);
 		req.onreadystatechange = function() {
 			if (req.readyState == 4 && req.status == 200)
-				callback(req.responseText);
+				callback(JSON.parse(req.responseText));
 		};
 	};
 
