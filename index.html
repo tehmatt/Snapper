@@ -60,6 +60,15 @@
 		</div>
 	</div>
 
+	<div id="drawing" class="major">
+		<div id="drawingPencil" class="squareButton" onclick="Drawing.toggleColorPicker();"></div>
+		<div id="colorPicker"></div>
+		<div id="drawingTimer" class="squareButton" onclick="Drawing.setTime();">9</div>
+		<div id="saveButton" class="squareButton" onclick="Drawing.saveImage();"></div>
+		<div id="sendButton" onclick="Drawing.send();">Send</div>
+		<canvas id="drawingCanvas"></canvas>
+	</div>
+
 	<div id="displaySnap" class="major">
 		<div class="ticker"></div>
 	</div>
