@@ -9,7 +9,7 @@ var Snap = new function() {
 		return this.info.auth_token;
 	};
 	this.getUserInfo = function() {
-		return {user: this.info.username, phone: this.info.snapchat_phone_number};
+		return {user: this.info.username, phone: this.info.mobile, email: this.info.email};
 	};
 	this.getFriends = function() {
 		return {friends: this.info.friends.filter(function(elem){return elem.name !== Snap.getUserInfo().user;}),

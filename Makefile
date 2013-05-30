@@ -1,3 +1,5 @@
+all: js css
+
 js:
 	rm -f snapper-min.js
 	rm -f snapper.js
@@ -14,8 +16,7 @@ css:
 	cat css/main.css >> snapper.css
 	cat css/login.css >> snapper.css
 	cat css/friends.css >> snapper.css
+	cat css/settings.css >> snapper.css
 	cat css/snaps.css >> snapper.css
 	cat css/camera.css >> snapper.css
 	cat css/drawing.css >> snapper.css
-
-all: js css

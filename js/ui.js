@@ -4,7 +4,7 @@ var UI = new function() {
 		if (typeof(form) != "undefined")
 			var login = [document.login.elements.username.value, document.login.elements.password.value];
 		else
-			var login = [localStorage["user"], localStorage["pass"]].filter(function(elem){return elem});
+			var login = [localStorage["user"], localStorage["pass"]].filter(function(elem){return elem;});
 		if (login.length != 2) {
 			this.displayLogin();
 			return;
@@ -34,6 +34,7 @@ var UI = new function() {
 		this.initCamera();
 		this.displaySection("camera");
 		this.initFriends();
+		this.initSettings();
 		this.initSnaps();
 		this.initDrawing();
 	};
@@ -57,8 +58,10 @@ var UI = new function() {
 			}, 1000);
 			setTimeout(function() {
 				clearInterval(timeLeft);
+				UI.initSnaps();
 				UI.displaySection("snapchats");
 				div.removeChild(img);
+
 			}, time*1000);
 		};
 		img.src = uri;
@@ -74,7 +77,6 @@ var UI = new function() {
 				function() {UI.displaySection("settings")}, false);
 		document.getElementById("friendsLink").addEventListener("click",
 				function() {UI.displaySection("friends")}, false);
-		document.getElementById("logout").addEventListener("click", UI.logout, false);
 	};
 
 	this.initDrawing = function() {
@@ -129,10 +131,20 @@ var UI = new function() {
 		}
 	};
 
+	this.initSettings = function() {
+		var info = Snap.getUserInfo();
+		var info = [info.user, info.phone, info.email];
+		info[1] = info[1].substring(0,2) + " " + info[1].substring(2,5) + " " + info[1].substring(5,8) + " " + info[1].substring(8,12);
+		var accInfo = document.getElementById("account").children;
+		for (var i = 0; i < accInfo.length; i++)
+			accInfo[i].children[0].innerHTML = info[i];
+	};
+
 	// Create the list of snaps
 	this.initSnaps = function() {
 		var snaps = Snap.getSnaps();
 		var snapList = document.getElementById("snapsAll");
+		snapList.innerHTML = "";
 		for (var i = 0; i < snaps.length; i++) {
 			var s = snaps[i];
 			var view = Snap.getView(s);
@@ -196,7 +208,7 @@ var UI = new function() {
 
 	this.logout = function() {
 		if (confirm("Are you sure you want to logout?")) {
-			localStorage.clear();
+			localStorage["user"] = localStorage["pass"] = "";
 			location.reload();
 		}
 	};

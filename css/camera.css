@@ -21,18 +21,15 @@
 	width: 80px;
 }
 
-#logout {
-	left: 0;
-}
 #snapsLink {
-	left: 100px;
+	left: 0px;
 }
 #captureImage {
-	left: 200px;
+	left: 82px;
 }
 #settingsLink {
-	right: 100px;
+	left: 164px;
 }
 #friendsLink {
-	right: 0px;
+	left: 246px;
 }

@@ -1,0 +1,46 @@
+#settings .header {
+	border-bottom: 0;
+}
+
+#top {
+	border-top: 1px solid #44B;
+}
+
+#settings ul {
+	list-style: none inside none;
+	padding: 0;
+	margin: 0;
+	margin-bottom: 16px;
+}
+
+#settings li {
+	padding: 8px;
+	height: 32px;
+	line-height: 32px;
+	border-bottom: 1px solid #BBB;
+	font-size: 18px;
+	font-weight: bold;
+	overflow: hidden;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+}
+
+.data {
+	position: absolute;
+	right: 8px;
+	font-weight: normal;
+	overflow: hidden;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+	text-align: left;
+}
+
+#logout {
+	margin-top: 40px;
+	background-color: #EF4868;
+	color: #EEE;
+	text-shadow: 1px 1px #000;
+	text-align: center;
+	font-size: 24px;
+}
+

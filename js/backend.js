@@ -46,4 +46,21 @@ var Backend = new function() {
 				callback(JSON.parse(req.responseText));
 		};
 	};
+
+	this.upload = function(data, type, recipients, time, callback) {
+		var req = new XMLHttpRequest();
+		var data = "username=" + localStorage["user"] +
+			"&type=" + type +
+			"&recp=" + recipients +
+			"&time=" + time +
+			"&auth_token=" + Snap.getAuth() +
+			"&data=" + data;
+		req.open("POST", "http://win8.mbryant.tk/api.php?call=upload", true);
+		req.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+		req.send(data);
+		req.onreadystatechange = function() {
+			if (req.readyState == 4 && req.status == 200)
+				callback(JSON.parse(req.responseText));
+		};
+	};
 };
