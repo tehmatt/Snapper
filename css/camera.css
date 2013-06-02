@@ -21,15 +21,27 @@
 	width: 80px;
 }
 
+#cameraFlip {
+	position: absolute;
+	right: 20px;
+	top: 20px;
+	z-index: 2;
+	height: 50px;
+	width: 75px;
+	background-image: url("assets/camera-flip.png");
+	background-repeat: no-repeat;
+	background-size: 75px 50px;
+}
+
 #snapsLink {
 	left: 0px;
 }
 #captureImage {
-	left: 82px;
+	left: 133px;
 }
 #settingsLink {
-	left: 164px;
+	left: 266px;
 }
 #friendsLink {
-	left: 246px;
+	left: 400px;
 }

@@ -14,3 +14,9 @@ function timePassed(start) {
 		return (pass.getUTCMinutes() == 1 ? "1 minute ago" : pass.getUTCMinutes() + " minutes ago");
 	return (pass.getSeconds() == 1 ? "1 second ago" : pass.getUTCSeconds() + " seconds ago");
 }
+
+function nodeListToArr(nodeList) {
+	var nodes = [];
+	for (var i = nodeList.length; i--; nodes.unshift(nodeList[i]));
+	return nodes;
+}

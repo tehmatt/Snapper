@@ -19,6 +19,7 @@ case 'login':
 		echo json_encode($result);
 	}
 	break;
+
 case 'getSnap':
 	$s = new Snaphax(array(
 		'username' => $username,
@@ -35,9 +36,7 @@ case 'getSnap':
 		}
 	}
 	break;
-case 'sendSnap':
-	echo '{}';
-	break;
+
 case 'friend':
 	$action = isset($_POST['action']) ? $_POST['action'] : '';
 	$friend = isset($_POST['friend']) ? $_POST['friend'] : '';
@@ -49,19 +48,23 @@ case 'friend':
 	$result = $s->friend($action, $friend, $name);
 	echo json_encode($result);
 	break;
+
 case 'upload':
-	$data = isset($_POST['data']) ? $_POST['data'] : '';
+	$data = isset($_POST['data']) ? str_replace(' ', '+', $_POST['data']) : '';
 	$type = isset($_POST['type']) ? $_POST['type'] : '';
 	$recp = isset($_POST['recp']) ? $_POST['recp'] : '';
+	$recp = explode(',', $recp);
 	$time = isset($_POST['time']) ? $_POST['time'] : '';
+	$img_data = base64_decode($data) or die("{\"message\":\"Invalid image.\"}");
 
 	$s = new Snaphax(array(
 		'username' => $username,
 		'auth_token' => $auth_token
 	));
-	$result = $s->upload($jpg_data, $type, $recp, $time);
+	$result = $s->upload($img_data, $type, $recp, $time);
 	echo json_encode($result);
 	break;
+
 default:
 	echo '{"message": "Invalid api call!"}';
 	break;

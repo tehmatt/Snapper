@@ -1,4 +1,5 @@
 <?php
+	ini_set('display_errors',1);
 	/*
 	SnapHax: a library for communicating with Snaphax
 	Implements a subset of the Snaphax API
@@ -145,7 +146,7 @@
 			if (!is_array($recipients))
 				$recipients = array($recipients);
 			$ts = $this->api->time();
-			$media_id = strtoupper($this->options['username']).time();
+			$media_id = strtoupper($this->options['username'].trim(uuid_create()));
 			$this->api->debug('upload snap data', $file_data);
 			$file_data_encrypted = $this->api->encrypt($file_data);
 			$this->api->debug('upload snap data encrypted', $file_data_encrypted);
@@ -154,10 +155,10 @@
 			$result = $this->api->postCall(
 				'/ph/upload',
 				array(
+					'req_token' => '',
 					'username' => $this->options['username'],
 					'timestamp' => $ts,
 					'type' => $type,
-					// 'data' => urlencode($file_data_encrypted).'; filename="file"',
 					'data' => "@$tempname;filename=data",
 					'media_id' => $media_id
 				),
@@ -174,6 +175,7 @@
 				$result = $this->api->postCall(
 					'/ph/send',
 					array(
+						'req_token' => '',
 						'username' => $this->options['username'],
 						'timestamp' => $ts,
 						'recipient' => $recipient,

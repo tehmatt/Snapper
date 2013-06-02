@@ -89,9 +89,8 @@
 	</div>
 
 	<div id="camera" class="major">
-		<div id="cameraView">
-			Camera goes here.
-		</div>
+		<div id="cameraFlip" onclick="Camera.flipCamera();"> </div>
+		<div id="cameraView"> </div>
 		<div id="snapsLink" class="button">
 			snaps
 		</div>
@@ -112,10 +111,21 @@
 		<div id="undoButton" class="squareButton" onclick="Drawing.undoDraw();"></div>
 		<input id="drawingTimer" class="squareButton" type="number" min="3" max="10" value="9">
 		<div id="saveButton" class="squareButton" onclick="Drawing.saveImage();"></div>
-		<div id="sendButton" onclick="Drawing.send();" maxlength=2>Send</div>
+		<div id="sendButton" onclick="UI.initRecipients();UI.displaySection('recipients');">Send</div>
 		<canvas id="drawingCanvas"></canvas>
 		<div id="drawTextBar">
 			<input id="drawingText" type="text" spellcheck="true" maxlength="100">
+		</div>
+	</div>
+
+	<div id="recipients" class="major">
+		<div class="header">
+			Send to:
+		</div>
+		<ul id="recpAll">
+		</ul>
+		<div class="loginInput" id="recpSendButton" onclick="Drawing.send();">
+			Send
 		</div>
 	</div>
 
@@ -130,6 +140,7 @@
 -->
 <script type="text/javascript" src="snapper.js"></script>
 <script type="text/javascript">
+	console.warn("REDO UI.displaySection() to init pages that need it before displaying (fetch new snaps each time displayed, etc)");
 	UI.login();
 </script>
 </html>

@@ -20,3 +20,4 @@ css:
 	cat css/snaps.css >> snapper.css
 	cat css/camera.css >> snapper.css
 	cat css/drawing.css >> snapper.css
+	cat css/recipients.css >> snapper.css

@@ -131,6 +131,33 @@ var UI = new function() {
 		}
 	};
 
+	// Fill the friends list
+	this.initRecipients = function() {
+		var allFriends = Snap.getFriends();
+		var friends = allFriends.friends.sort(Snap.friendSort);
+		var friendList = document.getElementById("recpAll");
+		friendList.innerHTML = "";
+
+		for (var i = 0; i < friends.length; i++) {
+			var f = friends[i];
+			var friendli = document.createElement("li");
+			var display = document.createElement("span");
+			display.className = "friend";
+			display.innerHTML = (f.display ? f.display : f.name);
+			friendli.appendChild(display);
+			var name = document.createElement("span");
+			name.className = "friendAlt";
+			name.innerHTML = (f.display ? f.name : "");
+			friendli.appendChild(name);
+			var check = document.createElement("input");
+			check.className = "recpSelect";
+			check.type = "checkbox";
+			check.checked = false;
+			friendli.appendChild(check);
+			friendList.appendChild(friendli);
+		}
+	};
+
 	this.initSettings = function() {
 		var info = Snap.getUserInfo();
 		var info = [info.user, info.phone, info.email];

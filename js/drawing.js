@@ -1,33 +1,40 @@
 var Drawing = new function() {
-	this.penColor = "#F00"; // The color of the pencil
-	this.ctx = null; // Canvas context
-	this.cpCtx = null; // colorpicker context
-	this.drawHistory = []; // History of drawn images
-
 	var pencilElem = document.getElementById("drawingPencil");
 	var undoElem = document.getElementById("undoButton");
 	var canvas = document.getElementById("drawingCanvas");
 	var colorPicker = document.getElementById("colorPicker");
 	var inputBar = document.getElementById("drawTextBar");
+	var input = document.getElementById("drawingText");
 	var timerInput = document.getElementById("drawingTimer");
 	var events = ["mousedown", "mousemove", "mouseup", "touchstart", "touchmove", "touchend"];
 	var drawingStarted = false;
 	var colorPalette = new Image();
+	colorPalette.onload = function() {
+		Drawing.cpCtx.drawImage(colorPalette, 0, 0);
+		colorPalette = Drawing.cpCtx.getImageData(0,0,1,150);
+	};
+	colorPalette.src = "assets/color-picker.png";
+
+	this.penColor = "#F00"; // The color of the pencil
+	this.ctx = canvas.getContext('2d');
+	this.cpCtx = colorPicker.getContext('2d');
+	this.drawHistory = []; // History of drawn images
 
 	this.init = function() {
-		this.ctx = canvas.getContext('2d');
-		this.cpCtx = colorPicker.getContext('2d');
-		colorPalette.onload = function() {
-			Drawing.cpCtx.drawImage(colorPalette, 0, 0);
-			colorPalette = Drawing.cpCtx.getImageData(0,0,1,150);
-		};
-		colorPalette.src = "assets/color-picker.png";
+		colorPicker.style.display = "none";
+		inputBar.style.display = "none";
+		undoElem.style.display = "none";
+		this.setColor("#BBB", true);
+		this.drawHistory = [];
 		timerInput.value = localStorage["snapTime"] || 10;
 		canvas.width = window.innerWidth;
 		canvas.height = window.innerHeight;
 		canvas.addEventListener("click", Drawing.addText, false);
+		input.value = "";
 		for (var i = 0; i < events.length; i++)
 			colorPicker.addEventListener(events[i], Drawing.pickColor, false);
+		this.ctx.fillStyle = "#FFF";
+		this.ctx.fillRect(0,0,canvas.width, canvas.height);
 		this.ctx.strokeStyle = "#F00";
 		this.ctx.lineWidth = 3;
 		this.ctx.lineCap = "round";
@@ -65,8 +72,11 @@ var Drawing = new function() {
 	this.undoDraw = function() {
 		var prev = this.drawHistory.pop();
 		this.ctx.clearRect(0, 0, canvas.width, canvas.height);
-		if (this.drawHistory.length == 0)
+		if (this.drawHistory.length == 0) {
+			this.ctx.fillStyle = "#FFF";
+			this.ctx.fillRect(0,0,canvas.width, canvas.height);
 			this.hideUndo();
+		}
 		else
 			this.ctx.putImageData(prev, 0, 0);
 	};
@@ -80,13 +90,13 @@ var Drawing = new function() {
 
 	this.addText = function() {
 		inputBar.style.display = "block";
-		inputBar.children[0].focus();
+		input.focus();
 	};
 
 	this.hideText = function() {
-		if (inputBar.children[0].value == "")
+		if (input.value == "")
 			inputBar.style.display = "none";
-		inputBar.children[0].blur();
+		input.blur();
 	};
 
 	this.draw = function(e) {
@@ -123,7 +133,7 @@ var Drawing = new function() {
 	};
 
 	this.createFinalImage = function() {
-		if (inputBar.children[0].value != "") {
+		if (input.value != "") {
 			this.ctx.fillStyle = "rgb(50,50,50)";
 			this.ctx.globalAlpha = .7;
 			this.ctx.fillRect(0, inputBar.offsetTop, canvas.width, 32);
@@ -135,10 +145,10 @@ var Drawing = new function() {
 			this.ctx.font = "20px Segoe UI";
 			this.ctx.textAlign = "center";
 			this.ctx.fillStyle = "#FFF";
-			this.ctx.fillText(inputBar.children[0].value, canvas.width/2, inputBar.offsetTop+22)
+			this.ctx.fillText(input.value, canvas.width/2, inputBar.offsetTop+22)
 			inputBar.style.display = "none";
 		}
-		return canvas.toDataURL("image/jpeg");
+		return canvas.toDataURL("image/jpeg", .8).replace(/^data:image\/jpeg;base64,/, "");
 	};
 
 	this.getTimer = function() {
@@ -149,10 +159,12 @@ var Drawing = new function() {
 	};
 
 	this.saveImage = function() {
-
+		alert("Jesus saves.  Snapper doesn't.");
 	};
 
 	this.send = function() {
-		Backend.upload(this.createFinalImage(), 0, ["tehlinuxking"]/*recipients*/, this.getTimer(), function(x) { console.log(x)});
+		var recipients = nodeListToArr(document.getElementById("recpAll").getElementsByTagName("input"));
+		recipients = recipients.filter(function(x){return x.checked;}).map(function(x) {var p = x.parentNode.children; return (p[1].innerHTML || p[0].innerHTML);});
+		Backend.upload(this.createFinalImage(), 0, recipients.join(), this.getTimer(), function(x) {UI.displaySection("camera"); UI.initDrawing();});
 	};
 };
