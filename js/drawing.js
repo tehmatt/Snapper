@@ -165,6 +165,7 @@ var Drawing = new function() {
 	this.send = function() {
 		var recipients = nodeListToArr(document.getElementById("recpAll").getElementsByTagName("input"));
 		recipients = recipients.filter(function(x){return x.checked;}).map(function(x) {var p = x.parentNode.children; return (p[1].innerHTML || p[0].innerHTML);});
-		Backend.upload(this.createFinalImage(), 0, recipients.join(), this.getTimer(), function(x) {UI.displaySection("camera"); UI.initDrawing();});
+		Backend.upload(this.createFinalImage(), 0, recipients.join(), this.getTimer());
+		UI.displaySection("camera");
 	};
 };

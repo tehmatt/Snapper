@@ -47,7 +47,7 @@ var Backend = new function() {
 		};
 	};
 
-	this.upload = function(data, type, recipients, time, callback) {
+	this.upload = function(data, type, recipients, time) {
 		var req = new XMLHttpRequest();
 		var data = "username=" + localStorage["user"] +
 			"&type=" + type +
@@ -59,8 +59,14 @@ var Backend = new function() {
 		req.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
 		req.send(data);
 		req.onreadystatechange = function() {
-			if (req.readyState == 4 && req.status == 200)
-				callback(JSON.parse(req.responseText));
+			if (req.readyState == 4 && req.status == 200) {
+				try {
+					JSON.parse(req.responseText);
+				}
+				catch(e) {
+					alert("Failure sending snap!");
+				}
+			}
 		};
 	};
 };

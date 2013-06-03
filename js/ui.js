@@ -31,19 +31,38 @@ var UI = new function() {
 	};
 
 	this.drawApp = function() {
-		this.initCamera();
 		this.displaySection("camera");
-		this.initFriends();
-		this.initSettings();
-		this.initSnaps();
-		this.initDrawing();
 	};
 
 	this.displaySection = function(section) {
 		var topLevels = document.body.children;
 		for (var i = 0; i < topLevels.length; i++)
 			topLevels[i].style.display = "none";
+		this.initSection(section);
 		document.getElementById(section).style.display = "block";
+	};
+
+	this.initSection = function(section, displayFunc) {
+		switch(section) {
+			case "camera":
+				this.initCamera();
+				break;
+			case "drawing":
+				Drawing.init();
+				break;
+			case "friends":
+				this.initFriends();
+				break;
+			case "recipients":
+				this.initRecipeints();
+				break;
+			case "settings":
+				this.initSettings();
+				break;
+			case "snapchats":
+				this.initSnapchats();
+				break;
+		}
 	};
 
 	this.displaySnap = function(uri, time) {
@@ -58,7 +77,6 @@ var UI = new function() {
 			}, 1000);
 			setTimeout(function() {
 				clearInterval(timeLeft);
-				UI.initSnaps();
 				UI.displaySection("snapchats");
 				div.removeChild(img);
 
@@ -77,10 +95,6 @@ var UI = new function() {
 				function() {UI.displaySection("settings")}, false);
 		document.getElementById("friendsLink").addEventListener("click",
 				function() {UI.displaySection("friends")}, false);
-	};
-
-	this.initDrawing = function() {
-		Drawing.init();
 	};
 
 	// Fill the friends list
@@ -168,7 +182,7 @@ var UI = new function() {
 	};
 
 	// Create the list of snaps
-	this.initSnaps = function() {
+	this.initSnapchats = function() {
 		var snaps = Snap.getSnaps();
 		var snapList = document.getElementById("snapsAll");
 		snapList.innerHTML = "";
@@ -205,7 +219,6 @@ var UI = new function() {
 					Snap.renameFriend(name, newName);
 				else if (action == 2)
 					Snap.addFriend(result.object);
-				UI.initFriends();
 			}
 			else {
 				var errorMsg = (action == 0 ? "deleting" : (action == 1 ? "updating" : "adding"));
