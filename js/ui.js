@@ -54,7 +54,7 @@ var UI = new function() {
 				this.initFriends();
 				break;
 			case "recipients":
-				this.initRecipeints();
+				this.initRecipients();
 				break;
 			case "settings":
 				this.initSettings();
