@@ -1,4 +1,6 @@
 #drawing {
+	position: absolute;
+	left: 0px;
 	overflow: hidden;
 }
 
@@ -26,7 +28,7 @@
 	right: 20px;
 	top: 20px;
 	background-color: #BBB;
-	background-image: url("assets/pencil.png");
+	background-image: url("/assets/pencil.png");
 	border: 1px solid #666;
 }
 
@@ -46,7 +48,7 @@
 	right: 80px;
 	top: 20px;
 	background-color: #F00;
-	background-image: url("assets/undo.png");
+	background-image: url("/assets/undo.png");
 	border: 1px solid #666;
 	display: none;
 }
@@ -55,13 +57,13 @@
 	left: 20px;
 	bottom: 20px;
 	border: 0;
-	background-image: url("assets/timer.png");
+	background-image: url("/assets/timer.png");
 }
 
 #saveButton {
 	left: 80px;
 	bottom: 20px;
-	background-image: url("assets/save.png");
+	background-image: url("/assets/save.png");
 }
 
 #sendButton {
@@ -73,7 +75,7 @@
 	z-index: 2;
 	background-repeat: no-repeat;
 	background-size: 92px 50px;
-	background-image: url("assets/send.png");
+	background-image: url("/assets/send.png");
 	text-align: center;
 	line-height: 50px;
 	font-size: 32px;

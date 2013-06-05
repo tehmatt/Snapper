@@ -1,3 +1,8 @@
+#friends {
+	background-color: #FFF;
+	color: #000;
+}
+
 #friends ul {
 	list-style: none inside none;
 	padding: 0;
@@ -22,6 +27,7 @@
 
 #friends .friendAlt {
 	padding: 0 10px;
+	float: right;
 	text-align: right;
 	display: inline-block;
 	font-style: italic;
@@ -33,7 +39,7 @@
 	background-position: 5px;
 	background-repeat: no-repeat;
 	background-size: 45px 40px;
-	background-image: url("assets/friend-request.png");
+	background-image: url("/assets/friend-request.png");
 }
 
 #friends .expand {
@@ -42,6 +48,7 @@
 	border-style: solid;
 	border-color: #CCC;
 	border-width: 1px 0;
+	color: #000;
 	background-color: #DDD;
 	text-align: center;
 	display: none;

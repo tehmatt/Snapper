@@ -7,6 +7,7 @@
 	width: 100%;
 	background-color: #000;
 	position: absolute;
+	left: 0px;
 	top: 0;
 	bottom: 80px;
 	color: #FFF;
@@ -17,8 +18,8 @@
 	bottom: 0;
 	border: 1px solid #000;
 	background-color: #55F;
-	height: 80px;
-	width: 80px;
+	height: 60px;
+	width: 60px;
 }
 
 #cameraFlip {
@@ -28,7 +29,7 @@
 	z-index: 2;
 	height: 50px;
 	width: 75px;
-	background-image: url("assets/camera-flip.png");
+	background-image: url("/assets/camera-flip.png");
 	background-repeat: no-repeat;
 	background-size: 75px 50px;
 }
@@ -37,11 +38,11 @@
 	left: 0px;
 }
 #captureImage {
-	left: 133px;
+	left: 80px;
 }
 #settingsLink {
-	left: 266px;
+	left: 180px;
 }
 #friendsLink {
-	left: 400px;
+	left: 260px;
 }

@@ -1,142 +1,145 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html>
-	<head>
-		<!-- Favicon stuff -->
-		<link rel="shortcut icon" href="/assets/logo-nobg.png" type="image/png" />
-		<link rel="icon" href="/assets/logo-nobg.png" type="image/png" />
-		<!-- End Favicon -->
-		<meta name="viewport" content="width=480px, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-		<link href="/snapper.css" type="text/css" rel="stylesheet" />
-		<title>Snapper</title>
-	</head>
-	<body>
-		<div id="login" class="major">
-			<img id="loginLogo" src="/assets/logo-nobg.png" alt="Snapper" />
-			<div id="loginHeader">
-				Snapper
-			</div>
-			<div id="loginMessage"></div>
-			<form id="loginForm" name="login" onsubmit="UI.login(true);return false;">
-				<input id="loginName" class="loginInput" type="text" name="username" placeholder="Username or Email" /><br/>
-				<input id="loginPass" class="loginInput" type="password" name="password" placeholder="Password" /><br/><br/>
-				<input id="loginSubmit" class="loginInput" type="submit" onclick="UI.login(true);return false;" value="Login" />
-			</form>
-		</div>
+  <head>
+    <!-- Favicon stuff -->
+    <link rel="shortcut icon" href="/assets/logo-nobg.png" type="image/png" />
+    <link rel="icon" href="/assets/logo-nobg.png" type="image/png" />
+    <!-- End Favicon -->
+    <meta name="viewport" content="width=480px, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <link href="/snapper.css" type="text/css" rel="stylesheet" />
+    <title>Snapper</title>
+  </head>
+  <body>
+    <div id="login" class="major">
+      <img id="loginLogo" src="/assets/logo-nobg.png" alt="Snapper" />
+      <div id="loginHeader">
+        Snapper
+      </div>
+      <div id="loginMessage"></div>
+      <form id="loginForm" name="login" onsubmit="UI.login(true);return false;">
+        <input id="loginName" class="loginInput" type="text" name="username" placeholder="Username or Email" />
+        <br/>
+        <input id="loginPass" class="loginInput" type="password" name="password" placeholder="Password" />
+        <br/>
+        <br/>
+        <input id="loginSubmit" class="loginInput" type="submit" onclick="UI.login(true);return false;" value="Login" />
+      </form>
+    </div>
 
-		<div id="friends" class="major">
-			<div class="header">
-				Friend List
-			</div>
-			<ul id="friendsAll">
-			</ul>
-		</div>
+    <div id="friends" class="major">
+      <div class="header">
+        Friend List
+      </div>
+      <ul id="friendsAll">
+      </ul>
+    </div>
 
-		<div id="snapchats" class="major">
-			<div class="header">
-				Received Snaps
-			</div>
-			<ul id="snapsAll"> </ul>
-		</div>
+    <div id="snapchats" class="major">
+      <div class="header">
+        Received Snaps
+      </div>
+      <ul id="snapsAll"> </ul>
+    </div>
 
-		<div id="settings" class="major">
-			<div class="header">
-				Settings
-			</div>
-			<div id="top" class="subheader">
-				My Account
-			</div>
-			<ul id="account">
-				<li>
-				Username:
-				<span class="data"> </span>
-				</li>
-				<li>
-				Mobile #:
-				<span class="data"> </span>
-				</li>
-				<li>
-				Email:
-				<span class="data"> </span>
-				</li>
+    <div id="settings" class="major">
+      <div class="header">
+        Settings
+      </div>
+      <div id="top" class="subheader">
+        My Account
+      </div>
+      <ul id="account">
+        <li>
+          Username:
+          <span class="data"> </span>
+        </li>
+        <li>
+          Mobile #:
+          <span class="data"> </span>
+        </li>
+        <li>
+          Email:
+          <span class="data"> </span>
+        </li>
 
-			</ul>
-			<div class="subheader">
-				Who can...
-			</div>
-			<ul>
-				<li>
-				Send me Snaps
-				<span class="data" id="whocan">
-					stuff
-				</span>
-				</li>
-			</ul>
-			<div class="subheader">
-				More Information
-			</div>
-			<ul id="moreinfo">
-				<li>
-				Privacy Policy
-				</li>
-				<li>
-				Terms
-				</li>
-			</ul>
-			<div class="loginInput" id="logout" onclick="UI.logout()">
-				Logout
-			</div>
-		</div>
+      </ul>
+      <div class="subheader">
+        Who can...
+      </div>
+      <ul>
+        <li>
+          Send me Snaps
+          <span class="data" id="whocan">
+            stuff
+          </span>
+        </li>
+      </ul>
+      <div class="subheader">
+        More Information
+      </div>
+      <ul id="moreinfo">
+        <li>
+          Privacy Policy
+        </li>
+        <li>
+          Terms
+        </li>
+      </ul>
+      <div class="loginInput" id="logout" onclick="UI.logout()">
+        Logout
+      </div>
+    </div>
 
-		<div id="camera" class="major">
-			<div id="cameraFlip" onclick="Camera.flipCamera();"> </div>
-			<div id="cameraView"> </div>
-			<div id="snapsLink" class="button">
-				snaps
-			</div>
-			<div id="captureImage" class="button">
-				take picture
-			</div>
-			<div id="settingsLink" class="button">
-				Settings
-			</div>
-			<div id="friendsLink" class="button">
-				Friends
-			</div>
-		</div>
+    <div id="camera" class="major">
+      <div id="cameraFlip" onclick="Camera.flipCamera();"> </div>
+      <div id="cameraView"> </div>
+      <div id="snapsLink" class="button">
+        snaps
+      </div>
+      <div id="captureImage" class="button">
+        take picture
+      </div>
+      <div id="settingsLink" class="button">
+        Settings
+      </div>
+      <div id="friendsLink" class="button">
+        Friends
+      </div>
+    </div>
 
-		<div id="drawing" class="major">
-			<div id="drawingPencil" class="squareButton" onclick="Drawing.toggleDrawing();"></div>
-			<canvas id="colorPicker" width="1" height="150"></canvas>
-			<div id="undoButton" class="squareButton" onclick="Drawing.undoDraw();"></div>
-			<input id="drawingTimer" class="squareButton" type="number" min="3" max="10" value="9" />
-			<div id="saveButton" class="squareButton" onclick="Drawing.saveImage();"></div>
-			<div id="sendButton" onclick="UI.initRecipients();UI.displaySection('recipients');">Send</div>
-			<canvas id="drawingCanvas"></canvas>
-			<div id="drawTextBar">
-				<input id="drawingText" type="text" spellcheck="true" maxlength="100" />
-			</div>
-		</div>
+    <div id="drawing" class="major">
+      <div id="drawingPencil" class="squareButton" onclick="Drawing.toggleDrawing();"></div>
+      <canvas id="colorPicker" width="1" height="150"></canvas>
+      <div id="undoButton" class="squareButton" onclick="Drawing.undoDraw();"></div>
+      <input id="drawingTimer" class="squareButton" type="number" min="3" max="10" value="9" />
+      <div id="saveButton" class="squareButton" onclick="Drawing.saveImage();"></div>
+      <div id="sendButton" onclick="UI.initRecipients();UI.displaySection('recipients');">Send</div>
+      <canvas id="drawingCanvas"></canvas>
+      <div id="drawTextBar">
+        <input id="drawingText" type="text" spellcheck="true" maxlength="100" />
+      </div>
+    </div>
 
-		<div id="recipients" class="major">
-			<div class="header">
-				Send to:
-			</div>
-			<ul id="recpAll">
-			</ul>
-			<div class="loginInput" id="recpSendButton" onclick="Drawing.send();">
-				Send
-			</div>
-		</div>
+    <div id="recipients" class="major">
+      <div class="header">
+        Send to:
+      </div>
+      <ul id="recpAll">
+      </ul>
+      <div class="loginInput" id="recpSendButton" onclick="Drawing.send();">
+        Send
+      </div>
+    </div>
 
-		<div id="displaySnap" class="major">
-			<div class="ticker"></div>
-		</div>
+    <div id="displaySnap" class="major">
+      <div class="ticker"></div>
+    </div>
 
 
-	</body>
-	<!-- <script type="text/javascript" src="snapper-min.js"></script> -->
-	<script type="text/javascript" src="/snapper.js"></script>
-<!--	<script type="text/javascript">
-		UI.login();
-	</script>-->
+  </body>
+  <!-- <script type="text/javascript" src="snapper-min.js"></script> -->
+  <script type="text/javascript" src="/snapper.js"></script>
+  <script type="text/javascript">
+    UI.login();
+  </script>
 </html>

@@ -2,6 +2,7 @@
 	background-color: #070;
 	text-align: center;
 	padding-top: 20px;
+	display: block;
 }
 
 #loginLogo {

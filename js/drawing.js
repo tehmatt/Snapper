@@ -13,7 +13,7 @@ var Drawing = new function() {
 		Drawing.cpCtx.drawImage(colorPalette, 0, 0);
 		colorPalette = Drawing.cpCtx.getImageData(0,0,1,150);
 	};
-	colorPalette.src = "assets/color-picker.png";
+	colorPalette.src = "/assets/color-picker.png";
 
 	this.penColor = "#F00"; // The color of the pencil
 	this.ctx = canvas.getContext('2d');

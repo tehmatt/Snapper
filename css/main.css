@@ -1,4 +1,7 @@
 html, body {
+	background-color: #FFF;
+	color: #000;
+	width: 100%;
 	height: 100%;
 	margin: 0;
 	padding: 0;
@@ -7,6 +10,8 @@ html, body {
 }
 
 .major {
+	position: absolute;
+	left: 0px;
 	display: none;
 	margin: 0;
 	padding: 0;

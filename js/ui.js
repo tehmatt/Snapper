@@ -253,3 +253,8 @@ var UI = new function() {
 		}
 	};
 };
+
+function displaySection(s)
+{
+	return UI.displaySection(s);
+}
