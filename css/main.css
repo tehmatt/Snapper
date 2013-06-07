@@ -53,6 +53,8 @@ html, body {
 }
 
 #displaySnap {
+	position: absolute;
+	left: 0px;
 	z-index: 100;
 	overflow: hidden;
 }

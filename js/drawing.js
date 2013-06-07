@@ -17,7 +17,7 @@ var Drawing = new function() {
 
 	var img = new Image();
 	img.onload = function() {
-		Drawing.ctx.drawImage(img, 0, 0);
+		Drawing.ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
 	};
 
 	this.penColor = "#F00"; // The color of the pencil
@@ -43,7 +43,9 @@ var Drawing = new function() {
 		this.ctx.strokeStyle = "#F00";
 		this.ctx.lineWidth = 3;
 		this.ctx.lineCap = "round";
-		img.src = "data:image/jpeg;base64," + image;
+		if(image) {
+			img.src = "data:image/jpeg;base64," + image;
+		}
 	};
 
 	this.toggleDrawing = function() {

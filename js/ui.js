@@ -254,7 +254,10 @@ var UI = new function() {
 	};
 };
 
-function displaySection(s)
-{
+function displaySection(s) {
 	return UI.displaySection(s);
+}
+
+function loginvisible() {
+	return document.getElementById("login").display === "none";
 }
