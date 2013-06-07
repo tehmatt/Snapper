@@ -15,12 +15,17 @@ var Drawing = new function() {
 	};
 	colorPalette.src = "/assets/color-picker.png";
 
+	var img = new Image();
+	img.onload = function() {
+		Drawing.ctx.drawImage(img, 0, 0);
+	};
+
 	this.penColor = "#F00"; // The color of the pencil
 	this.ctx = canvas.getContext('2d');
 	this.cpCtx = colorPicker.getContext('2d');
 	this.drawHistory = []; // History of drawn images
 
-	this.init = function() {
+	this.init = function(image) {
 		colorPicker.style.display = "none";
 		inputBar.style.display = "none";
 		undoElem.style.display = "none";
@@ -38,6 +43,7 @@ var Drawing = new function() {
 		this.ctx.strokeStyle = "#F00";
 		this.ctx.lineWidth = 3;
 		this.ctx.lineCap = "round";
+		img.src = "data:image/jpeg;base64," + image;
 	};
 
 	this.toggleDrawing = function() {
@@ -169,3 +175,7 @@ var Drawing = new function() {
 		UI.displaySection("camera");
 	};
 };
+
+function initdrawing(image) {
+	Drawing.init(image);
+}
