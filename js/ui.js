@@ -32,11 +32,13 @@ var UI = new function() {
 	};
 
 	this.drawApp = function() {
-		window.external.notify("camera");
 		this.displaySection("camera");
 	};
 
 	this.displaySection = function(section) {
+		if (section === "camera") {
+			window.external.notify("camera");
+		}
 		var topLevels = document.body.children;
 		for (var i = 0; i < topLevels.length; i++)
 			topLevels[i].style.display = "none";
