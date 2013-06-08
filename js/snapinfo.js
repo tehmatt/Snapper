@@ -1,9 +1,12 @@
 var Snap = new function() {
 	// Snapchat login data saved here
 	this.info = {};
+	this.updateInterval = null;
 
 	this.setLogin = function(info) {
 		this.info = info;
+		if (!this.updateInterval)
+			this.updateInterval = setInterval(Snap.update, 10000);
 	};
 	this.getAuth = function() {
 		return this.info.auth_token;
@@ -26,6 +29,9 @@ var Snap = new function() {
 	};
 	this.getSnaps = function() {
 		return this.info.snaps;
+	};
+	this.getSenderById = function(id) {
+		return Snap.getSnaps().filter(function(x){return x.id == id;})[0].sn;
 	};
 	this.friendSort = function(a,b) {
 		a = (a.display ? a.display : a.name).toLowerCase();
@@ -73,5 +79,16 @@ var Snap = new function() {
 			default:
 				return "";
 		}
+	};
+	this.update = function() {
+		var oldSnaps = Snap.getSnaps().filter(function(x){return x.sn;}).map(function(x){return x.id;});
+		Snap.setLogin(Backend.login(localStorage["user"], localStorage["pass"]));
+		var newSnaps = Snap.getSnaps().filter(function(x){return x.sn;}).map(function(x){return x.id;});
+		var newSnaps = newSnaps.filter(function(x){return oldSnaps.indexOf(x) == -1;}).map(Snap.getSenderById);
+		if (newSnaps.length)
+			Snap.newNotify(newSnaps);
+	};
+	this.newNotify = function(newSnaps) {
+		window.external.notify("notifications:"+newSnaps.join());
 	};
 };

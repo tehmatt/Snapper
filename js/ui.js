@@ -34,6 +34,7 @@ var UI = new function() {
 	this.drawApp = function() {
 		window.external.notify("camera");
 		this.displaySection("camera");
+		setInterval(UI.initSnapchats, 2000);
 	};
 
 	this.displaySection = function(section) {
@@ -185,6 +186,7 @@ var UI = new function() {
 
 	// Create the list of snaps
 	this.initSnapchats = function() {
+		console.log("Drawing snapchats");
 		var snaps = Snap.getSnaps();
 		var snapList = document.getElementById("snapsAll");
 		snapList.innerHTML = "";
