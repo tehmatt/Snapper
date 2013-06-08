@@ -24,3 +24,9 @@ function nodeListToArr(nodeList) {
 function initdrawing(image) {
 	Drawing.init(image);
 }
+
+window.external = new function() {
+	this.notify = function(x) {
+		console.log(x);
+	};
+}

@@ -188,7 +188,6 @@ var UI = new function() {
 
 	// Create the list of snaps
 	this.initSnapchats = function() {
-		console.log("Drawing snapchats");
 		var snaps = Snap.getSnaps();
 		var snapList = document.getElementById("snapsAll");
 		snapList.innerHTML = "";

@@ -30,8 +30,9 @@ var Snap = new function() {
 	this.getSnaps = function() {
 		return this.info.snaps;
 	};
-	this.getSenderById = function(id) {
-		return Snap.getSnaps().filter(function(x){return x.id == id;})[0].sn;
+	this.newSnaps = function(snaps) {
+		Snap.info.snaps = snaps.concat(Snap.info.snaps);
+		Snap.newNotify(snaps);
 	};
 	this.friendSort = function(a,b) {
 		a = (a.display ? a.display : a.name).toLowerCase();
@@ -81,14 +82,11 @@ var Snap = new function() {
 		}
 	};
 	this.update = function() {
-		var oldSnaps = Snap.getSnaps().filter(function(x){return x.sn;}).map(function(x){return x.id;});
-		Snap.setLogin(Backend.login(localStorage["user"], localStorage["pass"]));
-		var newSnaps = Snap.getSnaps().filter(function(x){return x.sn;}).map(function(x){return x.id;});
-		var newSnaps = newSnaps.filter(function(x){return oldSnaps.indexOf(x) == -1;}).map(Snap.getSenderById);
-		if (newSnaps.length)
-			Snap.newNotify(newSnaps);
+		Backend.fetchNewSnaps(Snap.newSnaps);
 	};
 	this.newNotify = function(newSnaps) {
-		window.external.notify("notifications:"+newSnaps.join());
+		newSnaps = newSnaps.filter(function(x){return x.sn;}).map(function(x){return x.sn;});
+		if (newSnaps.length)
+			window.external.notify("notifications:"+newSnaps.join());
 	};
 };
