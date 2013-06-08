@@ -17,7 +17,11 @@ var Drawing = new function() {
 
 	var img = new Image();
 	img.onload = function() {
+		Drawing.ctx.translate(canvas.width - 1, canvas.height - 1);
+		Drawing.ctx.rotate(Math.PI);
 		Drawing.ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+		Drawing.ctx.translate(canvas.width - 1, canvas.height - 1);
+		Drawing.ctx.rotate(Math.PI);
 	};
 
 	this.penColor = "#F00"; // The color of the pencil
