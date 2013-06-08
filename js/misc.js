@@ -20,3 +20,7 @@ function nodeListToArr(nodeList) {
 	for (var i = nodeList.length; i--; nodes.unshift(nodeList[i]));
 	return nodes;
 }
+
+function initdrawing(image) {
+	Drawing.init(image);
+}

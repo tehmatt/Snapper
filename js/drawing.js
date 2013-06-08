@@ -43,9 +43,8 @@ var Drawing = new function() {
 		this.ctx.strokeStyle = "#F00";
 		this.ctx.lineWidth = 3;
 		this.ctx.lineCap = "round";
-		if(image) {
+		if(typeof(image) != "undefined")
 			img.src = "data:image/jpeg;base64," + image;
-		}
 	};
 
 	this.toggleDrawing = function() {
@@ -172,12 +171,11 @@ var Drawing = new function() {
 
 	this.send = function() {
 		var recipients = nodeListToArr(document.getElementById("recpAll").getElementsByTagName("input"));
-		recipients = recipients.filter(function(x){return x.checked;}).map(function(x) {var p = x.parentNode.children; return (p[1].innerHTML || p[0].innerHTML);});
+		recipients = recipients.filter(function(x){return x.checked;}).map(function(x) {
+			var p = x.parentNode.children;
+			return (p[1].innerHTML || p[0].innerHTML);
+		});
 		Backend.upload(this.createFinalImage(), 0, recipients.join(), this.getTimer());
 		UI.displaySection("camera");
 	};
 };
-
-function initdrawing(image) {
-	Drawing.init(image);
-}
