@@ -25,8 +25,10 @@ function initdrawing(image) {
 	Drawing.init(image);
 }
 
-window.external = new function() {
-	this.notify = function(x) {
-		console.log(x);
-	};
+if (typeof(external.notify) == "undefined") {
+	window.external = new function() {
+		this.notify = function(x) {
+			console.log(x);
+		};
+	}
 }

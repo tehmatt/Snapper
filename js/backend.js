@@ -26,7 +26,8 @@ var Backend = new function() {
 		req.onreadystatechange = function() {
 			if (req.readyState == 4 && req.status == 200) {
 				try {
-					callback(JSON.parse(req.responseText));
+					var response = JSON.parse(req.responseText);
+					callback(response);
 				}
 				catch (err) {
 					console.log(err);
