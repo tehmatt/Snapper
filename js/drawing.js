@@ -95,7 +95,8 @@ var Drawing = new function() {
 		undoButton.style.display = "block";
 	};
 
-	this.addText = function() {
+	this.addText = function(e) {
+		inputBar.style.top = e.clientY + "px";
 		inputBar.style.display = "block";
 		input.focus();
 	};
