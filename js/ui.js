@@ -28,9 +28,11 @@ var UI = new function() {
 		}
 		document.getElementById("loginPass").value = "";
 		document.getElementById("login").style.display = "block";
+		window.external.notify("login");
 	};
 
 	this.drawApp = function() {
+		window.external.notify("camera");
 		this.displaySection("camera");
 	};
 
@@ -256,8 +258,4 @@ var UI = new function() {
 
 function displaySection(s) {
 	return UI.displaySection(s);
-}
-
-function loginvisible() {
-	return document.getElementById("login").display === "none";
 }
