@@ -39,6 +39,7 @@ var UI = new function() {
 	this.displaySection = function(section) {
 		if (section === "camera") {
 			window.external.notify("camera");
+			return;
 		}
 		var topLevels = document.body.children;
 		for (var i = 0; i < topLevels.length; i++)
